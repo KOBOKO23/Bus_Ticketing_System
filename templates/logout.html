@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section style="text-align:center; margin-top:50px;">
+    <h2>You have been logged out successfully</h2>
+    <p>Thank you for using Vuka Africa.</p>
+    <div style="margin-top:20px;">
+        <a href="{{ url_for('login') }}" 
+           style="display:inline-block; margin:10px; padding:10px 20px; background-color:#4CAF50; color:white; text-decoration:none; border-radius:5px;">
+           Log In Again
+        </a>
+        <a href="{{ url_for('register') }}" 
+           style="display:inline-block; margin:10px; padding:10px 20px; background-color:#2196F3; color:white; text-decoration:none; border-radius:5px;">
+           Register
+        </a>
+    </div>
+</section>
+{% endblock %}

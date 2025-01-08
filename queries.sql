@@ -34,3 +34,15 @@
     	updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 	);
 
+	INSERT INTO bus (busid, origin, destination, cost, rating, departure, capacity) 
+	VALUES
+    	('12345', 'Nairobi', 'Migori', 1299, 4.3, '2024-12-31 12:00:00', 60),
+    	('12346', 'Nairobi', 'Kitale', 1999, 3.3, '2025-01-02 12:00:00', 60),
+    	('12348', 'Nairobi', 'Kisumu', 1289, 4.8, '2025-01-03 12:00:00', 60);
+
+
+	INSERT INTO booking (booking_id, usersid, busid, passengers, date_) 
+	VALUES
+    	('B001', 'U001', '12345', 3, '2024-12-31'),
+    	('B002', 'U002', '12346', 2, '2025-01-02');
+

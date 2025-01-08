@@ -1,35 +1,38 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div style="text-align:center; margin:50px auto; max-width:400px;">
-    <h2>Register</h2>
-    <form action="{{ url_for('register') }}" method="POST" style="display:flex; flex-direction:column; align-items:center;">
-        <div style="margin-bottom:15px; width:100%;">
-            <label for="name" style="display:block; text-align:left; margin-bottom:5px;">Name</label>
-            <input type="text" id="name" name="name" required placeholder="Enter your full name"
-                   style="width:100%; padding:10px; border:1px solid #ccc; border-radius:5px;">
+<section class="search-form">
+    <h2>Search for Bus Tickets</h2>
+    <form action="{{ url_for('index') }}" method="POST">
+        <div class="form-group">
+            <label for="from">From:</label>
+            <select name="from" id="origin" required>
+                <option value="" disabled selected>Select your departure</option>
+                <option value="nairobi">Nairobi</option>
+                <option value="migori">Migori</option>
+                <option value="kisumu">Kisumu</option>
+                <option value="kitale">Kitale</option>
+                <option value="kakamega">Kakamega</option>
+            </select>
         </div>
-        <div style="margin-bottom:15px; width:100%;">
-            <label for="email" style="display:block; text-align:left; margin-bottom:5px;">Email</label>
-            <input type="email" id="email" name="email" required placeholder="Enter your email"
-                   style="width:100%; padding:10px; border:1px solid #ccc; border-radius:5px;">
+        <div class="form-group">
+            <label for="to">To:</label>
+            <select name="to" id="destination" required>
+                <option value="" disabled selected>Select your destination</option>
+                <option value="migori">Migori</option>
+                <option value="nairobi">Nairobi</option>
+                <option value="kisumu">Kisumu</option>
+                <option value="kitale">Kitale</option>
+                <option value="kakamega">Kakamega</option>
+            </select>
         </div>
-        <div style="margin-bottom:15px; width:100%;">
-            <label for="phone" style="display:block; text-align:left; margin-bottom:5px;">Phone Number</label>
-            <input type="text" id="phone" name="phone" required placeholder="Enter your phone number"
-                   style="width:100%; padding:10px; border:1px solid #ccc; border-radius:5px;">
+        <div class="form-group">
+            <button type="submit" class="search-button">Search</button>
         </div>
-        <div style="margin-bottom:15px; width:100%;">
-            <label for="password" style="display:block; text-align:left; margin-bottom:5px;">Password</label>
-            <input type="password" id="password" name="password" required placeholder="Create a password"
-                   style="width:100%; padding:10px; border:1px solid #ccc; border-radius:5px;">
-        </div>
-        <button type="submit" style="background-color:#007BFF; color:white; padding:10px 20px; border:none; border-radius:5px; cursor:pointer;">
-            Register
-        </button>
     </form>
-    <p style="margin-top:15px;">
-        Already have an account? <a href="{{ url_for('login') }}" style="color:#007BFF;">Log in here</a>.
+    <p style="text-align:center; margin-top:20px;">
+        New to Vuka Africa? 
+        <a href="{{ url_for('logout') }}" style="color:#2196F3; text-decoration:underline;">Register here</a>.
     </p>
-</div>
+</section>
 {% endblock %}

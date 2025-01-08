@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <section id="confirmation">
+        <h2>Booking Confirmation</h2>
+        <p>Thank you for your booking, {{ booking['user_name'] }}!</p>
+        <p>Your booking details are as follows:</p>
+        <ul>
+            <li><strong>Booking ID:</strong> {{ booking['bookingid'] }}</li>
+            <li><strong>Bus ID:</strong> {{ booking['busid'] }}</li>
+            <li><strong>Passengers:</strong> {{ booking['passengers'] }}</li>
+        </ul>
+        <p>We appreciate your trust in Vuka Africa. Have a safe journey!</p>
+        <a href="{{ url_for('index') }}" class="button">Search Again</a>
+    </section>
+{% endblock %}

@@ -2,7 +2,7 @@
 
 {% block content %}
 <h2>Available Buses</h2>
-{% if bus %}
+{% if buses %}
     <table>
         <thead>
             <tr>
@@ -12,10 +12,11 @@
                 <th>Arrival</th>
                 <th>Passengers</th>
                 <th>Date</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
-            {% for b in bus %}
+            {% for b in buses %}
             <tr>
                 <td>{{ b.origin }}</td>
                 <td>{{ b.destination }}</td>
@@ -23,6 +24,7 @@
                 <td>{{ b.arrival }}</td>
                 <td>{{ b.passengers }}</td>
                 <td>{{ b.date_ }}</td>
+                <td><a href="{{ url_for('booked', busid=b.id) }}">Book Now</a></td>
             </tr>
             {% endfor %}
         </tbody>

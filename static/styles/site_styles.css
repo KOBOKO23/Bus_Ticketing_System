@@ -196,3 +196,59 @@ button.search-button:hover {
 .update-form input[type="submit"]:hover {
     background-color: #45a049;
 }
+/* Center the form container */
+.container {
+    text-align: center;
+    margin: 50px auto;
+    max-width: 400px;
+}
+
+/* Form heading */
+.container h2 {
+    margin-bottom: 20px;
+}
+
+/* Form container */
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Form inputs and labels */
+.form-group {
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+.form-group label {
+    display: block;
+    text-align: left;
+    margin-bottom: 5px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Submit button */
+button {
+    background-color: #007BFF;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Link for login */
+.login-link {
+    margin-top: 15px;
+}
+
+.login-link a {
+    color: #007BFF;
+}
