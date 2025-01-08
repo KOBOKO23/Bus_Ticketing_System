@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Book your tickets conveniently with Vuka Africa.">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/site_styles.css') }}">
+    <title>Vuka Africa</title>
+</head>
+<body>
+    <header id="header">
+        <h1>Vuka Africa - Book Your Ticket</h1>
+    </header>
+    <nav>
+        <ul style="text-align:center; list-style-type:none; padding:0;">
+            <li style="display:inline; margin-right:15px;">
+                <a href="{{ url_for('index') }}" title="Search for available tickets">Search</a>
+            </li>
+            <li style="display:inline;">
+                <a href="{{ url_for('update') }}" title="Update your booking details">Update</a>
+            </li>
+        </ul>
+    </nav>
+    <main id="content">
+        {% block content %}
+        {% endblock %}
+    </main>
+    <footer style="text-align:center; margin-top:20px;">
+        <p>&copy; 2024 Vuka Africa. All rights reserved.</p>
+    </footer>
+</body>
+</html>

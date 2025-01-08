@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="text-align:center; margin:50px auto; max-width:400px;">
+    <h2>Register</h2>
+    <form action="{{ url_for('register') }}" method="POST" style="display:flex; flex-direction:column; align-items:center;">
+        <div style="margin-bottom:15px; width:100%;">
+            <label for="name" style="display:block; text-align:left; margin-bottom:5px;">Name</label>
+            <input type="text" id="name" name="name" required placeholder="Enter your full name"
+                   style="width:100%; padding:10px; border:1px solid #ccc; border-radius:5px;">
+        </div>
+        <div style="margin-bottom:15px; width:100%;">
+            <label for="email" style="display:block; text-align:left; margin-bottom:5px;">Email</label>
+            <input type="email" id="email" name="email" required placeholder="Enter your email"
+                   style="width:100%; padding:10px; border:1px solid #ccc; border-radius:5px;">
+        </div>
+        <div style="margin-bottom:15px; width:100%;">
+            <label for="phone_number" style="display:block; text-align:left; margin-bottom:5px;">Phone Number</label>
+            <input type="text" id="phone_number" name="phone_number" required placeholder="Enter your phone number"
+                   style="width:100%; padding:10px; border:1px solid #ccc; border-radius:5px;">
+        </div>
+        <div style="margin-bottom:15px; width:100%;">
+            <label for="password" style="display:block; text-align:left; margin-bottom:5px;">Password</label>
+            <input type="password" id="password" name="password" required placeholder="Create a password"
+                   style="width:100%; padding:10px; border:1px solid #ccc; border-radius:5px;">
+        </div>
+        <button type="submit" style="background-color:#007BFF; color:white; padding:10px 20px; border:none; border-radius:5px; cursor:pointer;">
+            Register
+        </button>
+    </form>
+    <p style="margin-top:15px;">
+        Already have an account? <a href="{{ url_for('login') }}" style="color:#007BFF;">Log in here</a>.
+    </p>
+</div>
+{% endblock %}

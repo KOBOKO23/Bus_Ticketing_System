@@ -1,0 +1,198 @@
+#header {
+    padding: 30px;
+    text-align: center;
+    background: black;
+    color: white;
+    font-size: 40px;
+}
+
+form {
+    text-align: center;
+}
+
+table {
+    width: 100%;
+    text-align: center;
+}
+
+th, td {
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+}
+
+a:link, a:visited {
+    background-color: #f44336;
+    color: white;
+    padding: 7px 12px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+}
+
+a:hover, a:active {
+    background-color: red;
+}
+
+/* Styles for the booking success section */
+.booking-success {
+    text-align: center;
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.booking-success h2 {
+    color: #4CAF50; /* Green for success */
+    margin-bottom: 15px;
+}
+
+.booking-success p {
+    margin: 10px 0;
+    font-size: 16px;
+    color: #333;
+}
+
+.booking-success .button {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #4CAF50; /* Matching the success theme */
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.booking-success .button:hover {
+    background-color: #45a049;
+}
+
+.error-message {
+    text-align: center;
+    margin: 50px auto;
+    padding: 20px;
+    max-width: 600px;
+    background-color: #fff3cd; /* Light yellow for warning */
+    border: 1px solid #ffeeba;
+    border-radius: 10px;
+    color: #856404; /* Darker yellow for text */
+    font-family: Arial, sans-serif;
+}
+
+.error-message h2 {
+    font-size: 24px;
+    margin-bottom: 15px;
+}
+
+.error-message p {
+    font-size: 16px;
+    margin: 5px 0;
+}
+
+/* Styles for the search form section */
+.search-form {
+    text-align: center;
+    margin: 50px auto;
+    padding: 20px;
+    max-width: 600px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.search-form h2 {
+    color: #333;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin: 15px 0;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #555;
+}
+
+select {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+}
+
+button.search-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #4CAF50; /* Green theme */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button.search-button:hover {
+    background-color: #45a049;
+}
+
+.notification {
+    background-color: #4CAF50;
+    color: white;             
+    padding: 20px;             
+    border-radius: 5px;      
+    text-align: center;    
+    font-size: 16px;           
+    margin: 20px auto;       
+    width: 80%;               
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+}
+
+.notification p {
+    margin: 0; 
+    padding: 5px 0; 
+}
+
+.update-form {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    width: 60%;
+    margin: 40px auto;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.update-form label {
+    font-size: 18px;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.update-form input[type="text"] {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.update-form input[type="submit"] {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.update-form input[type="submit"]:hover {
+    background-color: #45a049;
+}
