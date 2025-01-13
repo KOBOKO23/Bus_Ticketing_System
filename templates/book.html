@@ -6,18 +6,18 @@
 
     {% if busid %}
         <div class="bus-details">
-            <p><strong>ID:</strong> {{ busid[0] }}</p>
-            <p><strong>Origin:</strong> {{ busid[1].title() }}</p>
-            <p><strong>Destination:</strong> {{ busid[2].title() }}</p>
-            <p><strong>Cost:</strong> Ksh {{ busid[3] }}</p>
-            <p><strong>Rating:</strong> {{ busid[4] }}</p>
-            <p><strong>Date:</strong> {{ busid[8] }}</p>
-            <p><strong>Departure Time:</strong> {{ busid[5] }}</p>
-            <p><strong>Arrival Time:</strong> {{ busid[6] }}</p>
-            <p><strong>Seats Available:</strong> {{ busid[7] }}</p>
+            <p><strong>ID:</strong> {{ busid['id'] }}</p>
+            <p><strong>Origin:</strong> {{ busid['origin'].title() }}</p>
+            <p><strong>Destination:</strong> {{ busid['destination'].title() }}</p>
+            <p><strong>Cost:</strong> Ksh {{ busid['cost'] }}</p>
+            <p><strong>Rating:</strong> {{ busid['rating'] }}</p>
+            <p><strong>Date:</strong> {{ busid['date'] }}</p>
+            <p><strong>Departure Time:</strong> {{ busid['departure_time'] }}</p>
+            <p><strong>Arrival Time:</strong> {{ busid['arrival_time'] }}</p>
+            <p><strong>Seats Available:</strong> {{ busid['seats_available'] }}</p>
         </div>
 
-        <form action="{{ url_for('booked', busid=busid[0]) }}" method="POST" class="booking-form">
+        <form action="{{ url_for('booking_form', busid=busid['id']) }}" method="POST" class="booking-form">
             <h3>Book Your Ticket</h3>
 
             <label for="name">Name:</label>
@@ -31,8 +31,8 @@
 
             <label for="passengers">Number of Passengers:</label>
             <select id="passengers" name="passengers" required>
-                {% for i in range(1, busid[7] + 1) %}
-                    <option value="{{ i }}">{{ i }}</option>
+                {% for seat in seats %}
+                    <option value="{{ seat }}">{{ seat }}</option>
                 {% endfor %}
             </select><br><br>
 

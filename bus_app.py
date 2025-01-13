@@ -150,44 +150,67 @@ def search():
 def book(busid):
     try:
         conn = get_db_connection()
-        cursor = conn.cursor(dictionary=True)
+        cursor = conn.cursor()
 
-        # Fetch bus details
-        query = "SELECT * FROM bus WHERE busid = %s"
+        query = "SELECT busid, origin, destination, cost, seats_left, departure, arrival FROM bus WHERE busid = %s"
         cursor.execute(query, (busid,))
-        busid = cursor.fetchone()
+        bus = cursor.fetchone()
 
-        if not busid:
-            return render_template('error.html')
+        if not bus:
+            flash("Bus not found.", "danger")
+            return redirect(url_for('search'))
 
-        # Get the current seat count (capacity - seats left)
-        seats_left = busid['Seats Left']
-        if seats_left <= 0:
-            flash("No seats available.", "danger")
-            return redirect(url_for('search'))  # Redirect to search if no seats are available
+        seats_left = bus[4]
 
-        # When a user clicks 'Book Now', reduce the available seats by 1
+        if 'user_id' not in session:
+            flash("You need to log in first.", "danger")
+            return redirect(url_for('login'))
+
+        user_id = session['user_id']
+        user_query = "SELECT username, phone, email FROM users WHERE usersid = %s"
+        cursor.execute(user_query, (user_id,))
+        user = cursor.fetchone()
+
+        if not user:
+            flash("User not found.", "danger")
+            return redirect(url_for('login'))
+
         if request.method == 'POST':
-            new_seat_count = seats_left - 1  # Decrease seat count by 1
-            update_query = "UPDATE bus SET `Seats Left` = %s WHERE busid = %s"
-            cursor.execute(update_query, (new_seat_count, busid))
-            conn.commit()  # Commit the transaction to save changes
+            name = request.form['name']
+            phone = request.form['phone']
+            email = request.form['email']
+            passengers = int(request.form['passengers'])
 
-            flash("Booking successful!", "success")
-            return redirect(url_for('search'))  # Redirect back to search after booking
+            if passengers > seats_left:
+                flash("Not enough seats available.", "danger")
+                return redirect(url_for('book', busid=busid))
 
-        # Show available seats in the booking form
-        seats = [i for i in range(1, seats_left + 1)]
-        return render_template('book.html', busid=busid, seats=seats)
+            updated_seats = seats_left - passengers
+            update_query = "UPDATE bus SET seats_left = %s WHERE busid = %s"
+            cursor.execute(update_query, (updated_seats, busid))
+            conn.commit()
 
-    except Exception as e:
-        logging.error(f"Error in booking route: {e}")
-        flash(f"Error: {e}", "danger")
-        return render_template('error.html')
+            booking_query = """
+            INSERT INTO bookings (busid, name, phone, email, passengers)
+            VALUES (%s, %s, %s, %s, %s)
+            """
+            cursor.execute(booking_query, (busid, name, phone, email, passengers))
+            conn.commit()
+
+            flash("Booking successful! Enjoy your journey.", "success")
+            return redirect(url_for('search'))
+
+        return render_template('booking_form.html', bus=bus, user=user)
+
+    except mysql.connector.Error as e:
+        logging.error(f"Database error: {e}")
+        flash("An error occurred while processing your request.", "danger")
+        return redirect(url_for('search'))
 
     finally:
         cursor.close()
         conn.close()
+
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=8080)
