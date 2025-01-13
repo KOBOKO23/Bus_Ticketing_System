@@ -3,15 +3,17 @@
 {% block content %}
 <div style="max-width: 400px; margin: 0 auto; padding: 20px; text-align: center;">
     <h2>Login</h2>
+    
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
-            <div style="color: red;">
+            <div style="color: red; margin-bottom: 15px;">
                 {% for category, message in messages %}
                     <p>{{ message }}</p>
                 {% endfor %}
             </div>
         {% endif %}
     {% endwith %}
+    
     <form method="post" action="{{ url_for('login') }}">
         <div style="margin-bottom: 15px;">
             <input type="email" name="email" placeholder="Email" required style="width: 100%; padding: 10px;">
@@ -20,8 +22,12 @@
             <input type="password" name="password" placeholder="Password" required style="width: 100%; padding: 10px;">
         </div>
         <div>
-            <button type="submit" style="padding: 10px 20px;">Login</button>
+            <button type="submit" style="padding: 10px 20px; margin-bottom: 15px;">Login</button>
         </div>
     </form>
+    
+    <p style="margin-top: 15px; font-size: 14px;">
+        Don't have an account? <a href="{{ url_for('register') }}" style="color: blue; text-decoration: underline;">Register here</a>.
+    </p>
 </div>
 {% endblock %}

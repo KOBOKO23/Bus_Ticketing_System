@@ -1,38 +1,37 @@
 {% extends "base.html" %}
 
 {% block content %}
-<section class="search-form">
-    <h2>Search for Bus Tickets</h2>
-    <form action="{{ url_for('index') }}" method="POST">
+<section class="register-form">
+    <h2>Create an Account</h2>
+    <form action="{{ url_for('register') }}" method="POST">
         <div class="form-group">
-            <label for="from">From:</label>
-            <select name="from" id="origin" required>
-                <option value="" disabled selected>Select your departure</option>
-                <option value="nairobi">Nairobi</option>
-                <option value="migori">Migori</option>
-                <option value="kisumu">Kisumu</option>
-                <option value="kitale">Kitale</option>
-                <option value="kakamega">Kakamega</option>
-            </select>
+            <label for="name">Username</label>
+            <input type="text" name="name" id="name" required>
         </div>
+
         <div class="form-group">
-            <label for="to">To:</label>
-            <select name="to" id="destination" required>
-                <option value="" disabled selected>Select your destination</option>
-                <option value="migori">Migori</option>
-                <option value="nairobi">Nairobi</option>
-                <option value="kisumu">Kisumu</option>
-                <option value="kitale">Kitale</option>
-                <option value="kakamega">Kakamega</option>
-            </select>
+            <label for="email">Email</label>
+            <input type="email" name="email" id="email" required>
         </div>
+
         <div class="form-group">
-            <button type="submit" class="search-button">Search</button>
+            <label for="phone">Phone</label>
+            <input type="text" name="phone" id="phone" required>
+        </div>
+
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" name="password" id="password" required>
+        </div>
+
+        <div class="form-group">
+            <button type="submit" class="search-button">Register</button>
         </div>
     </form>
+
     <p style="text-align:center; margin-top:20px;">
-        New to Vuka Africa? 
-        <a href="{{ url_for('logout') }}" style="color:#2196F3; text-decoration:underline;">Register here</a>.
+        Already have an account? 
+        <a href="{{ url_for('login') }}" style="color:#2196F3; text-decoration:underline;">Login here</a>.
     </p>
 </section>
 {% endblock %}

@@ -1,5 +1,4 @@
-from flask import Flask, abort, render_template, request, redirect, url_for, session, flash
-from flask_mysqldb import MySQL
+from flask import Flask, render_template, request, redirect, url_for, session, flash
 import mysql.connector
 import bcrypt
 import os
@@ -36,6 +35,7 @@ def register():
             """
             cursor.execute(query, (username, email, phone, hashed_password))
             conn.commit()
+            flash("Registration successful. You can now log in.", "success")
         except mysql.connector.Error as err:
             flash(f"Database error: {err}", "danger")
         finally:
@@ -58,19 +58,19 @@ def login():
             query = "SELECT * FROM users WHERE email = %s"
             cursor.execute(query, (email,))
             user = cursor.fetchone()
+
+            if user and bcrypt.checkpw(password.encode('utf-8'), user['password'].encode('utf-8')):
+                session['user_id'] = user['usersid']
+                session['user_name'] = user['username']
+                flash("Login successful", "success")
+                return redirect(url_for('search'))  # Redirect to search.html after successful login
+            else:
+                flash("Invalid credentials, please try again.", "danger")
         except mysql.connector.Error as err:
             flash(f"Database error: {err}", "danger")
-            return redirect(url_for('login'))
         finally:
             cursor.close()
             conn.close()
-
-        if user and bcrypt.checkpw(password.encode('utf-8'), user['password'].encode('utf-8')):
-            session['user_id'] = user['usersid']
-            session['user_name'] = user['username']
-            return redirect(url_for('index'))
-        else:
-            flash("Invalid email or password", "danger")
 
     return render_template('login.html')
 
@@ -78,7 +78,7 @@ def login():
 def logout():
     session.pop('user_id', None)
     session.pop('user_name', None)
-    flash("You have successfully logged out.", "success")
+    flash("You have successfully logged out.")
     return redirect(url_for('login'))
 
 @app.route('/', methods=["GET", "POST"])
@@ -122,129 +122,55 @@ def index():
             cursor.close()
             conn.close()
 
-        return render_template('result.html', buses=buses)
+        return render_template('search.html', buses=buses)
 
     return render_template('index.html', user_name=session.get('user_name'))
 
-@app.route('/updateid', methods=["GET", "POST"])
-def update():
+@app.route('/search', methods=["GET", "POST"])
+def search():
     if 'user_id' not in session:
         return redirect(url_for('login'))
-
-    if request.method == "POST":
-        record_id = request.form['id']
-        if not record_id.isdigit():
-            flash("Invalid ID format.", "danger")
-            return redirect(url_for('update'))
-        return redirect(f"/change/{record_id}")
-
-    return render_template('updateid.html')
-
-@app.route('/booked/<busid>', methods=["POST"])
-def booked(busid):
-    if 'user_id' not in session:
-        flash("Please log in to book a ticket.", "danger")
-        return redirect(url_for('login'))
-
-    user_id = session['usersid']
-    user_name = session['username']
-    passengers = request.form.get('num_passengers')
-
-    # Validate passenger count
-    if not passengers or not passengers.isdigit() or int(passengers) <= 0:
-        flash("Please enter a valid number of passengers.", "danger")
-        return redirect(url_for('booking_form', busid=busid))
 
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
-
-        # Check if bus ID is valid
-        query = "SELECT COUNT(*) FROM bus WHERE busid = %s"
-        cursor.execute(query, (busid,))
-        if cursor.fetchone()[0] == 0:
-            flash("Invalid bus ID.", "danger")
-            return redirect(url_for('index'))
-
-        # Insert booking into database
-        query = """
-        INSERT INTO bookings (bookingid, userid, busid, passengers)
-        VALUES (UUID(), %s, %s, %s)
-        """
-        cursor.execute(query, (user_id, busid, passengers))
-        conn.commit()
+        query = "SELECT * FROM bus"
+        cursor.execute(query)
+        buses = cursor.fetchall()
     except mysql.connector.Error as err:
-        flash(f"Database error: {err}", "danger")
-        return redirect(url_for('index'))
+        flash(f"Database error: {err}")
+        return redirect(url_for('search'))
     finally:
         cursor.close()
         conn.close()
 
-    flash(f"Thank you, {user_name}, your booking for bus {busid} is confirmed!", "success")
-    return redirect(url_for('confirmation', booking_id=cursor.lastrowid))
+    return render_template('search.html', det=buses)
 
 
-#booking_form route
-@app.route('/booking_form/<busid>', methods=["GET", "POST"])
-def booking_form(busid):
-    if 'user_id' not in session:
-        flash("Please log in to proceed with booking.", "danger")
-        return redirect(url_for('login'))
-
-    user_id = session['usersid']
-    user_name = session['username']
-
+@app.route('/book/<int:busid>', methods=['GET', 'POST'])
+def book(busid):
     try:
-        conn = get_db_connection()
-        cursor = conn.cursor(dictionary=True)
+        validate_input(busid, int)
+        with db_connection() as (conn, cursor):
+            query = "SELECT * FROM bus WHERE busid = %s"
+            cursor.execute(query, (busid,))
+            busd = cursor.fetchall()
         
-        # Fetch bus details
-        query = "SELECT * FROM bus WHERE busid = %s"
-        cursor.execute(query, (busid,))
-        bus = cursor.fetchone()
-
-        if not bus:
-            flash("Bus not found.", "danger")
-            return redirect(url_for('index'))
-    except mysql.connector.Error as err:
-        flash(f"Database error: {err}", "danger")
-        return redirect(url_for('index'))
-    finally:
-        cursor.close()
-        conn.close()
-
-    if request.method == "POST":
-        passengers = request.form.get('num_passengers')
-
-        # Validate passenger count
-        if not passengers or not passengers.isdigit() or int(passengers) <= 0:
-            flash("Please enter a valid number of passengers.", "danger")
-            return redirect(url_for('booking_form', busid=busid))
-
-        return redirect(url_for('booked', busid=busid, num_passengers=passengers))
-
-    return render_template('booking_form.html', bus=bus, user_name=user_name)
+        if not busd:
+            return render_template('error.html')
+        
+        seat = busd[0][7]
+        if seat <= 0:
+            return render_template('no_seats.html')
+        
+        seats = [i for i in range(1, seat + 1)]
+        return render_template('book.html', busd=busd, seats=seats)
+    
+    except Exception as e:
+        logging.error(f"Error in booking route: {e}")
+        return render_template('error.html')
 
 
-
-@app.route('/confirmation/<booking_id>')
-def confirmation(booking_id):
-    try:
-        conn = get_db_connection()
-        cursor = conn.cursor(dictionary=True)
-        query = "SELECT * FROM bookings WHERE bookingid = %s"
-        cursor.execute(query, (booking_id,))
-        booking = cursor.fetchone()
-
-        if not booking:
-            abort(404)
-    except mysql.connector.Error as err:
-        flash(f"Database error: {err}", "danger")
-    finally:
-        cursor.close()
-        conn.close()
-
-    return render_template('confirmation.html', booking=booking)
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=8080)
