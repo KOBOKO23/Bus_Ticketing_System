@@ -146,23 +146,27 @@ def booked(busid):
         flash("Please log in to book a ticket.", "danger")
         return redirect(url_for('login'))
 
+    user_id = session['usersid']
+    user_name = session['username']
     passengers = request.form.get('num_passengers')
-    user_id = session['user_id']
-    user_name = session['user_name']
 
-    if not passengers.isdigit() or int(passengers) <= 0:
-        flash("Invalid number of passengers.", "danger")
-        return redirect(url_for('index'))
+    # Validate passenger count
+    if not passengers or not passengers.isdigit() or int(passengers) <= 0:
+        flash("Please enter a valid number of passengers.", "danger")
+        return redirect(url_for('booking_form', busid=busid))
 
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
+
+        # Check if bus ID is valid
         query = "SELECT COUNT(*) FROM bus WHERE busid = %s"
         cursor.execute(query, (busid,))
         if cursor.fetchone()[0] == 0:
             flash("Invalid bus ID.", "danger")
             return redirect(url_for('index'))
 
+        # Insert booking into database
         query = """
         INSERT INTO bookings (bookingid, userid, busid, passengers)
         VALUES (UUID(), %s, %s, %s)
@@ -177,7 +181,51 @@ def booked(busid):
         conn.close()
 
     flash(f"Thank you, {user_name}, your booking for bus {busid} is confirmed!", "success")
-    return render_template('booked.html', user_name=user_name, busid=busid, passengers=passengers)
+    return redirect(url_for('confirmation', booking_id=cursor.lastrowid))
+
+
+#booking_form route
+@app.route('/booking_form/<busid>', methods=["GET", "POST"])
+def booking_form(busid):
+    if 'user_id' not in session:
+        flash("Please log in to proceed with booking.", "danger")
+        return redirect(url_for('login'))
+
+    user_id = session['usersid']
+    user_name = session['username']
+
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        
+        # Fetch bus details
+        query = "SELECT * FROM bus WHERE busid = %s"
+        cursor.execute(query, (busid,))
+        bus = cursor.fetchone()
+
+        if not bus:
+            flash("Bus not found.", "danger")
+            return redirect(url_for('index'))
+    except mysql.connector.Error as err:
+        flash(f"Database error: {err}", "danger")
+        return redirect(url_for('index'))
+    finally:
+        cursor.close()
+        conn.close()
+
+    if request.method == "POST":
+        passengers = request.form.get('num_passengers')
+
+        # Validate passenger count
+        if not passengers or not passengers.isdigit() or int(passengers) <= 0:
+            flash("Please enter a valid number of passengers.", "danger")
+            return redirect(url_for('booking_form', busid=busid))
+
+        return redirect(url_for('booked', busid=busid, num_passengers=passengers))
+
+    return render_template('booking_form.html', bus=bus, user_name=user_name)
+
+
 
 @app.route('/confirmation/<booking_id>')
 def confirmation(booking_id):

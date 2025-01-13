@@ -24,7 +24,11 @@
                 <td>{{ b.arrival }}</td>
                 <td>{{ b.passengers }}</td>
                 <td>{{ b.date_ }}</td>
-                <td><a href="{{ url_for('booked', busid=b.id) }}">Book Now</a></td>
+                <td>
+                    <form action="{{ url_for('booking_form', busid=b.id) }}" method="POST">
+                        <button type="submit">Book Now</button>
+                    </form>
+                </td>
             </tr>
             {% endfor %}
         </tbody>
