@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash
+from flask import Flask, render_template, request, redirect, url_for, session, flash, logging
 import mysql.connector
 import bcrypt
 import os
@@ -146,31 +146,48 @@ def search():
 
     return render_template('search.html', det=buses)
 
-
 @app.route('/book/<int:busid>', methods=['GET', 'POST'])
 def book(busid):
     try:
-        validate_input(busid, int)
-        with db_connection() as (conn, cursor):
-            query = "SELECT * FROM bus WHERE busid = %s"
-            cursor.execute(query, (busid,))
-            busd = cursor.fetchall()
-        
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+
+        # Fetch bus details
+        query = "SELECT * FROM bus WHERE busid = %s"
+        cursor.execute(query, (busid,))
+        busd = cursor.fetchone()
+
         if not busd:
             return render_template('error.html')
-        
-        seat = busd[0][7]
-        if seat <= 0:
-            return render_template('no_seats.html')
-        
-        seats = [i for i in range(1, seat + 1)]
+
+        # Get the current seat count (capacity - seats left)
+        seats_left = busd['Seats Left']
+        if seats_left <= 0:
+            flash("No seats available.", "danger")
+            return redirect(url_for('search'))  # Redirect to search if no seats are available
+
+        # When a user clicks 'Book Now', reduce the available seats by 1
+        if request.method == 'POST':
+            new_seat_count = seats_left - 1  # Decrease seat count by 1
+            update_query = "UPDATE bus SET `Seats Left` = %s WHERE busid = %s"
+            cursor.execute(update_query, (new_seat_count, busid))
+            conn.commit()  # Commit the transaction to save changes
+
+            flash("Booking successful!", "success")
+            return redirect(url_for('search'))  # Redirect back to search after booking
+
+        # Show available seats in the booking form
+        seats = [i for i in range(1, seats_left + 1)]
         return render_template('book.html', busd=busd, seats=seats)
-    
+
     except Exception as e:
         logging.error(f"Error in booking route: {e}")
+        flash(f"Error: {e}", "danger")
         return render_template('error.html')
 
-
+    finally:
+        cursor.close()
+        conn.close()
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=8080)

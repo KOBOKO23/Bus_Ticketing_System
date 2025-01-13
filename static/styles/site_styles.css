@@ -252,3 +252,31 @@ button {
 .login-link a {
     color: #007BFF;
 }
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 18px;
+    text-align: left;
+}
+table th, table td {
+    padding: 12px;
+    border: 1px solid #ddd;
+}
+table th {
+    background-color: #f4f4f4;
+}
+table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+}
+.btn-primary:hover {
+    background-color: #0056b3;
+}
