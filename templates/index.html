@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 
 {% block content %}
+<!-- Link the index.css file here -->
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/index.css') }}">
+
 <section class="search-form">
     <h2>Search for Bus Tickets</h2>
     <form action="{{ url_for('index') }}" method="POST">
@@ -32,7 +35,7 @@
     </form>
 </section>
 
-<section class="logout-section" style="text-align:center; margin-top:20px;">
-    <a href="{{ url_for('logout') }}" style="display:inline-block; padding:10px 20px; background-color:#FF5722; color:white; text-decoration:none; border-radius:5px;">Logout</a>
+<section class="logout-section">
+    <a href="{{ url_for('logout') }}" class="logout-button">Logout</a>
 </section>
 {% endblock %}

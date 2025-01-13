@@ -1,45 +1,49 @@
 {% extends "base.html" %}
 
 {% block content %}
-<section class="bus-details-section">
-    <h2>Bus Details</h2>
+    <head>
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles/book.css') }}">
+    </head>
 
-    {% if busid %}
-        <div class="bus-details">
-            <p><strong>ID:</strong> {{ busid['id'] }}</p>
-            <p><strong>Origin:</strong> {{ busid['origin'].title() }}</p>
-            <p><strong>Destination:</strong> {{ busid['destination'].title() }}</p>
-            <p><strong>Cost:</strong> Ksh {{ busid['cost'] }}</p>
-            <p><strong>Rating:</strong> {{ busid['rating'] }}</p>
-            <p><strong>Date:</strong> {{ busid['date'] }}</p>
-            <p><strong>Departure Time:</strong> {{ busid['departure_time'] }}</p>
-            <p><strong>Arrival Time:</strong> {{ busid['arrival_time'] }}</p>
-            <p><strong>Seats Available:</strong> {{ busid['seats_available'] }}</p>
-        </div>
+    <section class="bus-details-section">
+        <h2>Bus Details</h2>
 
-        <form action="{{ url_for('booking_form', busid=busid['id']) }}" method="POST" class="booking-form">
-            <h3>Book Your Ticket</h3>
+        {% if busid %}
+            <div class="bus-details">
+                <p><strong>ID:</strong> {{ busid['id'] }}</p>
+                <p><strong>Origin:</strong> {{ busid['origin'].title() }}</p>
+                <p><strong>Destination:</strong> {{ busid['destination'].title() }}</p>
+                <p><strong>Cost:</strong> Ksh {{ busid['cost'] }}</p>
+                <p><strong>Rating:</strong> {{ busid['rating'] }}</p>
+                <p><strong>Date:</strong> {{ busid['date'] }}</p>
+                <p><strong>Departure Time:</strong> {{ busid['departure_time'] }}</p>
+                <p><strong>Arrival Time:</strong> {{ busid['arrival_time'] }}</p>
+                <p><strong>Seats Available:</strong> {{ busid['seats_available'] }}</p>
+            </div>
 
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="name" value="{{ user_data.name }}" required><br><br>
+            <form action="{{ url_for('booking_form', busid=busid['id']) }}" method="POST" class="booking-form">
+                <h3>Book Your Ticket</h3>
 
-            <label for="phone">Phone Number:</label>
-            <input type="text" id="phone" name="phone" value="{{ user_data.phone }}" required><br><br>
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" value="{{ user_data.name }}" required><br><br>
 
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" value="{{ user_data.email }}" required><br><br>
+                <label for="phone">Phone Number:</label>
+                <input type="text" id="phone" name="phone" value="{{ user_data.phone }}" required><br><br>
 
-            <label for="passengers">Number of Passengers:</label>
-            <select id="passengers" name="passengers" required>
-                {% for seat in seats %}
-                    <option value="{{ seat }}">{{ seat }}</option>
-                {% endfor %}
-            </select><br><br>
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" value="{{ user_data.email }}" required><br><br>
 
-            <input type="submit" name="submit" value="Book Ticket" class="submit-button">
-        </form>
-    {% else %}
-        <p>Bus details not available.</p>
-    {% endif %}
-</section>
+                <label for="passengers">Number of Passengers:</label>
+                <select id="passengers" name="passengers" required>
+                    {% for seat in seats %}
+                        <option value="{{ seat }}">{{ seat }}</option>
+                    {% endfor %}
+                </select><br><br>
+
+                <input type="submit" name="submit" value="Book Ticket" class="submit-button">
+            </form>
+        {% else %}
+            <p>Bus details not available.</p>
+        {% endif %}
+    </section>
 {% endblock %}

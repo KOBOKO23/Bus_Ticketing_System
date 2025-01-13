@@ -35,9 +35,9 @@ def register():
             """
             cursor.execute(query, (username, email, phone, hashed_password))
             conn.commit()
-            flash("Registration successful. You can now log in.", "success")
+            flash("Registration successful. You can now log in.")
         except mysql.connector.Error as err:
-            flash(f"Database error: {err}", "danger")
+            flash(f"Database error: {err}")
         finally:
             cursor.close()
             conn.close()
@@ -62,12 +62,11 @@ def login():
             if user and bcrypt.checkpw(password.encode('utf-8'), user['password'].encode('utf-8')):
                 session['user_id'] = user['usersid']
                 session['user_name'] = user['username']
-                flash("Login successful", "success")
-                return redirect(url_for('search'))  # Redirect to search.html after successful login
+                return redirect(url_for('search')) 
             else:
-                flash("Invalid credentials, please try again.", "danger")
+                flash("Invalid credentials, please try again.")
         except mysql.connector.Error as err:
-            flash(f"Database error: {err}", "danger")
+            flash(f"Database error: {err}")
         finally:
             cursor.close()
             conn.close()
@@ -96,7 +95,7 @@ def index():
         if user_count == 0:
             return redirect(url_for('register'))
     except mysql.connector.Error as err:
-        flash(f"Database error: {err}", "danger")
+        flash(f"Database error: {err}")
     finally:
         cursor.close()
         conn.close()
@@ -116,7 +115,7 @@ def index():
             cursor.execute(query, (origin.capitalize(), destination.capitalize()))
             buses = cursor.fetchall()
         except mysql.connector.Error as err:
-            flash(f"Database error: {err}", "danger")
+            flash(f"Database error: {err}")
             return redirect(url_for('index'))
         finally:
             cursor.close()
@@ -157,13 +156,13 @@ def book(busid):
         bus = cursor.fetchone()
 
         if not bus:
-            flash("Bus not found.", "danger")
+            flash("Bus not found.")
             return redirect(url_for('search'))
 
         seats_left = bus[4]
 
         if 'user_id' not in session:
-            flash("You need to log in first.", "danger")
+            flash("You need to log in first.")
             return redirect(url_for('login'))
 
         user_id = session['user_id']
@@ -172,7 +171,7 @@ def book(busid):
         user = cursor.fetchone()
 
         if not user:
-            flash("User not found.", "danger")
+            flash("User not found.")
             return redirect(url_for('login'))
 
         if request.method == 'POST':
@@ -182,7 +181,7 @@ def book(busid):
             passengers = int(request.form['passengers'])
 
             if passengers > seats_left:
-                flash("Not enough seats available.", "danger")
+                flash("Not enough seats available.")
                 return redirect(url_for('book', busid=busid))
 
             updated_seats = seats_left - passengers
@@ -197,14 +196,14 @@ def book(busid):
             cursor.execute(booking_query, (busid, name, phone, email, passengers))
             conn.commit()
 
-            flash("Booking successful! Enjoy your journey.", "success")
+            flash("Booking successful! Enjoy your journey.")
             return redirect(url_for('search'))
 
         return render_template('booking_form.html', bus=bus, user=user)
 
     except mysql.connector.Error as e:
         logging.error(f"Database error: {e}")
-        flash("An error occurred while processing your request.", "danger")
+        flash("An error occurred while processing your request.")
         return redirect(url_for('search'))
 
     finally:

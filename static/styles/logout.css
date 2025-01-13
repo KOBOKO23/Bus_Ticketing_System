@@ -1,0 +1,27 @@
+/* logout.css */
+.logout-container {
+    text-align: center;
+    margin-top: 50px;
+}
+
+.logout-buttons {
+    margin-top: 20px;
+}
+
+.logout-buttons a {
+    display: inline-block;
+    margin: 10px;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.btn-login {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.btn-register {
+    background-color: #2196F3;
+    color: white;
+}

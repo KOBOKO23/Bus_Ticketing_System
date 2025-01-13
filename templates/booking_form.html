@@ -1,50 +1,54 @@
 {% extends "base.html" %}
 
 {% block content %}
-<section class="booking-form-section">
-    <h2>Book Your Ticket</h2>
+    <head>
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles/booking_form.css') }}">
+    </head>
 
-    <div class="bus-details">
-        <p><strong>ID:</strong> {{ bus[0] }}</p>
-        <p><strong>Origin:</strong> {{ bus[1].title() }}</p>
-        <p><strong>Destination:</strong> {{ bus[2].title() }}</p>
-        <p><strong>Date:</strong> {{ bus[8] }}</p>
-        <p><strong>Departure Time:</strong> {{ bus[5] }}</p>
-        <p><strong>Arrival Time:</strong> {{ bus[6] }}</p>
-        <p><strong>Cost:</strong> Ksh {{ bus[3] }}</p>
-        <p><strong>Seats Available:</strong> {{ bus[4] }}</p>
-    </div>
+    <section class="booking-form-section">
+        <h2>Book Your Ticket</h2>
 
-    {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-        <div class="alert-container">
-            {% for category, message in messages %}
-                <div class="alert alert-{{ category }}">
-                    {{ message }}
-                </div>
-            {% endfor %}
+        <div class="bus-details">
+            <p><strong>ID:</strong> {{ bus[0] }}</p>
+            <p><strong>Origin:</strong> {{ bus[1].title() }}</p>
+            <p><strong>Destination:</strong> {{ bus[2].title() }}</p>
+            <p><strong>Date:</strong> {{ bus[8] }}</p>
+            <p><strong>Departure Time:</strong> {{ bus[5] }}</p>
+            <p><strong>Arrival Time:</strong> {{ bus[6] }}</p>
+            <p><strong>Cost:</strong> Ksh {{ bus[3] }}</p>
+            <p><strong>Seats Available:</strong> {{ bus[4] }}</p>
         </div>
-    {% endif %}
-    {% endwith %}
 
-    <form action="{{ url_for('book', busid=bus[0]) }}" method="POST" class="booking-form">
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="name" value="{{ user[0] }}" required><br><br>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="alert-container">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% endwith %}
 
-        <label for="phone">Phone Number:</label>
-        <input type="tel" id="phone" name="phone" pattern="[0-9]{10}" value="{{ user[1] }}" required placeholder="Enter 10 digit phone number"><br><br>
+        <form action="{{ url_for('book', busid=bus[0]) }}" method="POST" class="booking-form">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" value="{{ user[0] }}" required><br><br>
 
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" value="{{ user[2] }}" required><br><br>
+            <label for="phone">Phone Number:</label>
+            <input type="tel" id="phone" name="phone" pattern="[0-9]{10}" value="{{ user[1] }}" required placeholder="Enter 10 digit phone number"><br><br>
 
-        <label for="passengers">Number of Passengers:</label>
-        <select id="passengers" name="passengers" required>
-            {% for i in range(1, bus[4] + 1) %}
-                <option value="{{ i }}">{{ i }}</option>
-            {% endfor %}
-        </select><br><br>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" value="{{ user[2] }}" required><br><br>
 
-        <input type="submit" value="Confirm Booking" class="btn btn-primary">
-    </form>
-</section>
+            <label for="passengers">Number of Passengers:</label>
+            <select id="passengers" name="passengers" required>
+                {% for i in range(1, bus[4] + 1) %}
+                    <option value="{{ i }}">{{ i }}</option>
+                {% endfor %}
+            </select><br><br>
+
+            <input type="submit" value="Confirm Booking" class="btn btn-primary">
+        </form>
+    </section>
 {% endblock %}
