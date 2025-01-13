@@ -4,7 +4,7 @@
 <h2>Available Buses</h2>
 
 {% if det %}
-    <table>
+    <table class="bus-table">
         <thead>
             <tr>
                 <th>ID</th>
@@ -32,7 +32,11 @@
                 <td>{{ bus[6] }}</td>
                 <td>{{ bus[7] }}</td>
                 <td>
-                    <a href="{{ url_for('book', busid=bus[0]) }}" class="btn btn-primary">Book Now</a>
+                    {% if bus[7] > 0 %}
+                        <a href="{{ url_for('book', busid=bus[0]) }}" class="btn btn-primary">View & Reserve</a>
+                    {% else %}
+                        <button class="btn btn-secondary" disabled>Sold Out</button>
+                    {% endif %}
                 </td>
             </tr>
             {% endfor %}

@@ -155,13 +155,13 @@ def book(busid):
         # Fetch bus details
         query = "SELECT * FROM bus WHERE busid = %s"
         cursor.execute(query, (busid,))
-        busd = cursor.fetchone()
+        busid = cursor.fetchone()
 
-        if not busd:
+        if not busid:
             return render_template('error.html')
 
         # Get the current seat count (capacity - seats left)
-        seats_left = busd['Seats Left']
+        seats_left = busid['Seats Left']
         if seats_left <= 0:
             flash("No seats available.", "danger")
             return redirect(url_for('search'))  # Redirect to search if no seats are available
@@ -178,7 +178,7 @@ def book(busid):
 
         # Show available seats in the booking form
         seats = [i for i in range(1, seats_left + 1)]
-        return render_template('book.html', busd=busd, seats=seats)
+        return render_template('book.html', busid=busid, seats=seats)
 
     except Exception as e:
         logging.error(f"Error in booking route: {e}")
