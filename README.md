@@ -1,4 +1,4 @@
-# Bus Ticketing System
+# Bus Reservation System
 
 ## Overview
 
