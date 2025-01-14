@@ -1,5 +1,5 @@
-```markdown
- Bus Ticketing System
+```python
+# Bus Ticketing System
 
 ## Overview
 
