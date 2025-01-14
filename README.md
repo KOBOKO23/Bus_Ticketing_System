@@ -13,6 +13,8 @@ The **Bus Ticketing System** is a web application built using the Flask web fram
 
 ## Features
 
+```python
+
 - **User Registration**: Users can create an account by providing their details (username, email, phone number, etc.).
 - **User Login**: Users can securely log in using their credentials (email and password).
 - **CRUD Operations on User Profiles**: Users can create, read, update, and delete their profile details.
