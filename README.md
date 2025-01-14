@@ -1,4 +1,3 @@
-```python
 # Bus Ticketing System
 
 ## Overview
