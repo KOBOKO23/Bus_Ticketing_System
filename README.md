@@ -1,5 +1,5 @@
 ```markdown
-# Bus Ticketing System
+ Bus Ticketing System
 
 ## Overview
 
