@@ -1,0 +1,72 @@
+.confirmation-section {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+}
+
+.confirmation-container {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+}
+
+.success-message {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background-color: #e8f5e9;
+    border-radius: 4px;
+}
+
+.success-message h3 {
+    color: #2e7d32;
+    margin-bottom: 0.5rem;
+}
+
+.booking-info, .journey-info {
+    margin-bottom: 2rem;
+    padding: 1rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+}
+
+.booking-info h4, .journey-info h4 {
+    color: #333;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 0.5rem;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.btn-primary {
+    background-color: #1976d2;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #1565c0;
+}
+
+.btn-secondary {
+    background-color: #757575;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: #616161;
+}

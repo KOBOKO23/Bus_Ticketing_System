@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/booking_confirmation.css') }}">
+</head>
+
+<section class="confirmation-section">
+    <div class="confirmation-container">
+        <h2>Booking Confirmation</h2>
+        <div class="confirmation-details">
+            <div class="success-message">
+                <h3>✓ Booking Successful!</h3>
+                <p>Your ticket has been booked successfully.</p>
+            </div>
+            
+            <div class="booking-info">
+                <h4>Booking Details</h4>
+                <p><strong>Booking ID:</strong> {{ booking.booking_id }}</p>
+                <p><strong>Passenger Name:</strong> {{ booking.name or 'N/A' }}</p>
+                <p><strong>Number of Passengers:</strong> {{ booking.passengers }}</p>
+                <p><strong>Phone:</strong> {{ booking.phone or 'N/A' }}</p>
+                <p><strong>Email:</strong> {{ booking.email or 'N/A' }}</p>
+            </div>
+
+            <div class="journey-info">
+                <h4>Journey Details</h4>
+                <p><strong>From:</strong> {{ booking.origin or 'N/A' }}</p>
+                <p><strong>To:</strong> {{ booking.destination or 'N/A' }}</p>
+                <p><strong>Departure:</strong> {{ booking.departure | date('Y-m-d H:i') if booking.departure else 'N/A' }}</p>
+                <p><strong>Arrival:</strong> {{ booking.arrival | date('Y-m-d H:i') if booking.arrival else 'N/A' }}</p>
+                <p><strong>Total Cost:</strong> Ksh {{ booking.cost * booking.passengers if booking.cost and booking.passengers else '0' }}</p>
+            </div>
+        </div>
+        
+        <div class="action-buttons">
+            <a href="{{ url_for('search') }}" class="btn btn-primary">Book Another Ticket</a>
+            <!-- Add download ticket button if you implement that feature -->
+            <!-- <a href="#" class="btn btn-secondary">Download Ticket</a> -->
+        </div>
+    </div>
+</section>
+
+{% endblock %}
