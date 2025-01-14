@@ -3,7 +3,7 @@
 
 ## Overview
 
-The **Bus Ticketing System** is a web application built using the Flask web framework and MySQL as the database. This MVP allows users to:
+The Bus Ticketing System is a web application built using the Flask web framework and MySQL as the database. This MVP allows users to:
 - Register an account
 - Log in to their profiles
 - Book tickets for travel
@@ -13,7 +13,6 @@ The **Bus Ticketing System** is a web application built using the Flask web fram
 
 ## Features
 
-```python
 
 - **User Registration**: Users can create an account by providing their details (username, email, phone number, etc.).
 - **User Login**: Users can securely log in using their credentials (email and password).
