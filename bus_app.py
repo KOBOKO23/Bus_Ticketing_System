@@ -175,7 +175,7 @@ def book(busid):
             return redirect(url_for('login'))
 
         if request.method == 'POST':
-            name = request.form['name']
+            username = request.form['name']  # 'username' from form
             phone = request.form['phone']
             email = request.form['email']
             passengers = int(request.form['passengers'])
@@ -190,10 +190,10 @@ def book(busid):
             conn.commit()
 
             booking_query = """
-            INSERT INTO bookings (busid, name, phone, email, passengers)
-            VALUES (%s, %s, %s, %s, %s)
+            INSERT INTO booking (usersid, busid, name, phone, email, passengers)
+            VALUES (%s, %s, %s, %s, %s, %s)
             """
-            cursor.execute(booking_query, (busid, name, phone, email, passengers))
+            cursor.execute(booking_query, (user_id, busid, username, phone, email, passengers))
             conn.commit()
 
             flash("Booking successful! Enjoy your journey.")
