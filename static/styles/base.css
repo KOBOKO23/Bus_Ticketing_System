@@ -16,22 +16,31 @@ body {
   color: #333; /* Dark text color for readability */
   line-height: 1.6;
   padding: 20px;
+  font-size: 1rem; /* Consistent base font size */
+  transition: background-color 0.3s ease-in-out; /* Smooth transition on theme changes */
 }
 
 /* Header styles */
 #header {
-  background-color: #28a745; /* Blue background */
+  background-color: #28a745; /* Green background */
   color: white;
   text-align: center;
   padding: 20px;
-  border-radius: 5px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px; /* More rounded corners */
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1); /* Enhanced shadow for a deeper look */
+  transition: background-color 0.3s ease; /* Smooth background change */
 }
 
 #header h1 {
-  font-size: 2.5em;
+  font-size: 2.8em;
   font-weight: 700;
-  letter-spacing: 1px;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  transition: transform 0.3s ease-in-out; /* Hover effect for title */
+}
+
+#header h1:hover {
+  transform: scale(1.05); /* Slight zoom effect when hovered */
 }
 
 /* Navigation styles */
@@ -55,11 +64,29 @@ nav ul li a {
   font-size: 1.2em;
   color: #007bff;
   font-weight: bold;
-  transition: color 0.3s ease-in-out;
+  position: relative;
+  transition: color 0.3s ease-in-out, padding 0.3s ease-in-out;
+}
+
+nav ul li a::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  background-color: #007bff;
+  bottom: 0;
+  left: 50%;
+  transition: width 0.3s ease, left 0.3s ease;
 }
 
 nav ul li a:hover {
   color: #0056b3; /* Darker blue when hovered */
+  padding-bottom: 10px;
+}
+
+nav ul li a:hover::after {
+  width: 100%;
+  left: 0;
 }
 
 /* Main content area */
@@ -67,29 +94,69 @@ nav ul li a:hover {
   background-color: white;
   margin-top: 30px;
   padding: 30px;
-  border-radius: 5px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease-in-out; /* Smooth transition for background */
+}
+
+#content h2 {
+  font-size: 1.8em;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+#content p {
+  line-height: 1.8;
+  font-size: 1.1em;
+  color: #555;
 }
 
 /* Footer styles */
 footer {
   background-color: #333;
   color: white;
-  padding: 10px;
+  padding: 20px;
   margin-top: 40px;
-  border-radius: 5px;
+  border-radius: 10px;
   text-align: center; /* Center the text */
+  font-size: 1em;
 }
 
 footer p {
   font-size: 1em;
   letter-spacing: 0.5px;
+  transition: color 0.3s ease-in-out;
+}
+
+footer p:hover {
+  color: #f4f4f4; /* Lighten text on hover */
+}
+
+/* Button styling */
+button {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1.1em;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s ease-in-out, transform 0.2s ease;
+}
+
+button:hover {
+  background-color: #218838;
+  transform: scale(1.05); /* Slight zoom effect on hover */
+}
+
+button:active {
+  transform: scale(1); /* Revert zoom effect when button is clicked */
 }
 
 /* Responsive design for small screens */
 @media (max-width: 768px) {
   #header h1 {
-    font-size: 1.8em;
+    font-size: 2.2em;
   }
 
   nav ul {
@@ -98,14 +165,42 @@ footer p {
   }
 
   nav ul li {
-    margin-bottom: 10px;
+    margin-bottom: 15px;
+  }
+
+  nav ul li a {
+    font-size: 1.1em;
+  }
+
+  #content {
+    padding: 20px;
+  }
+
+  footer {
+    font-size: 0.9em;
+    padding: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    font-size: 0.9rem; /* Adjust font size for very small screens */
+  }
+
+  #header h1 {
+    font-size: 1.8em;
+  }
+
+  nav ul li {
+    margin-right: 10px;
   }
 
   nav ul li a {
     font-size: 1em;
   }
 
-  #content {
-    padding: 20px;
+  button {
+    padding: 8px 16px;
+    font-size: 1em;
   }
 }
