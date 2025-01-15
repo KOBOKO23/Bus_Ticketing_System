@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/profile.css') }}">
+
+  <div class="profile-container">
+    <!-- Profile Image -->
+    <div class="profile-image">
+      <img src="{{ user['profile_image_url'] or 'default_image.jpg' }}" alt="Profile Image">
+    </div>
+
+    <!-- Profile Information -->
+    <div class="profile-info">
+      <h2>User Profile</h2>
+      <div class="info-group">
+        <label for="username">Username:</label>
+        <span>{{ user['username'] }}</span> <!-- Corrected field -->
+      </div>
+      <div class="info-group">
+        <label for="other_names">Other Names:</label>
+        <span>{{ user['other_names'] }}</span>
+      </div>
+      <div class="info-group">
+        <label for="email">Email Address:</label>
+        <span>{{ user['email'] }}</span>
+      </div>
+      <div class="info-group">
+        <label for="phone_number">Phone Number:</label>
+        <span>{{ user['phone'] }}</span> <!-- Corrected field -->
+      </div>
+      <div class="info-group">
+        <label for="physical_address">Physical Address:</label>
+        <span>{{ user['physical_address'] }}</span>
+      </div>
+      <div class="info-group">
+        <label for="next_of_kin">Next of Kin:</label>
+        <span>{{ user['next_of_kin'] }}</span>
+      </div>
+      
+      <!-- Edit Profile and Search Button -->
+      <div class="edit-profile">
+        <a href="{{ url_for('edit_profile') }}" class="btn">Edit Profile</a>
+      </div>
+      <div class="search-bus">
+        <a href="{{ url_for('search') }}" class="btn">Search Buses</a>
+      </div>
+    </div>
+  </div>
+{% endblock %}

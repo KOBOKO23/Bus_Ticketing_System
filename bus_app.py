@@ -33,32 +33,50 @@ def generate_reset_token():
 @app.route('/register', methods=["GET", "POST"])
 def register():
     if request.method == "POST":
-        username = request.form['name']
+        username = request.form.get('username', 'Not provided')
         email = request.form['email']
-        phone = request.form['phone']
+        phone = request.form.get('phone', 'Not provided')
         password = request.form['password']
+        other_names = request.form.get('other_names', 'Not provided')
+        physical_address = request.form.get('physical_address', 'Not provided') 
+        next_of_kin = request.form.get('next_of_kin', 'Not provided') 
 
+        # Hash the password
         hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
         try:
             conn = get_db_connection()
             cursor = conn.cursor()
-            query = """
-            INSERT INTO users (usersid, username, email, phone, password)
-            VALUES (UUID(), %s, %s, %s, %s)
-            """
-            cursor.execute(query, (username, email, phone, hashed_password))
-            conn.commit()
-            flash("Registration successful. You can now log in.")
-        except mysql.connector.Error as err:
-            flash(f"Database error: {err}")
-        finally:
-            cursor.close()
-            conn.close()
 
-        return redirect(url_for('login'))
+            # Check for duplicate email
+            cursor.execute("SELECT email FROM users WHERE email = %s", (email,))
+            if cursor.fetchone():
+                flash("Email is already registered. Please use a different email.")
+                return redirect(url_for('register'))
+
+            # Insert new user into the database
+            query = """
+            INSERT INTO users (usersid, username, email, phone, password, other_names, physical_address, next_of_kin)
+            VALUES (UUID(), %s, %s, %s, %s, %s, %s, %s)
+            """
+            cursor.execute(query, (username, email, phone, hashed_password, other_names, physical_address, next_of_kin))
+            conn.commit()
+
+            flash("Registration successful. You can now log in.")
+            return redirect(url_for('login'))
+
+        except mysql.connector.IntegrityError:
+            flash("Registration failed. Email might already be in use.")
+        except mysql.connector.Error as err:
+            flash(f"Database error: {err}", "danger")
+        finally:
+            if 'cursor' in locals():
+                cursor.close()
+            if 'conn' in locals():
+                conn.close()
 
     return render_template('register.html')
+
 
 @app.route('/login', methods=["GET", "POST"])
 def login():
@@ -76,7 +94,7 @@ def login():
             if user and bcrypt.checkpw(password.encode('utf-8'), user['password'].encode('utf-8')):
                 session['user_id'] = user['usersid']
                 session['user_name'] = user['username']
-                return redirect(url_for('search')) 
+                return redirect(url_for('profile'))
             else:
                 flash("Invalid credentials, please try again.")
         except mysql.connector.Error as err:
@@ -127,7 +145,7 @@ def reset_password(token):
     user = cursor.fetchone()
     
     if not user:
-        flash("Invalid or expired token", "error")
+        flash("Invalid or expired token")
         return redirect(url_for('login'))
     
     if request.method == 'POST':
@@ -136,10 +154,109 @@ def reset_password(token):
         cursor.execute("UPDATE users SET password = %s, reset_token = NULL WHERE reset_token = %s", (hashed_password, token))
         conn.commit()
         
-        flash("Your password has been reset. You can now log in.", "success")
+        flash("Your password has been reset. You can now log in.")
         return redirect(url_for('login'))
     
     return render_template('reset_password.html')
+
+
+@app.route('/profile')
+def profile():
+    if 'user_id' not in session:
+        flash("You need to log in first.")
+        return redirect(url_for('login'))
+
+    user_id = session['user_id']
+    
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        query = "SELECT * FROM users WHERE usersid = %s LIMIT 1"
+        cursor.execute(query, (user_id,))
+        user = cursor.fetchone()
+
+        if not user:
+            flash("User not found.")
+            return redirect(url_for('login'))
+
+        # Debugging: print user data
+        print(f"User data fetched: {user}")  # This will help track if user data is correct
+
+        # Ensure all user fields have default values if missing
+        user['surname'] = user.get('surname', 'Not provided')
+        user['other_names'] = user.get('other_names', 'Not provided')
+        user['email'] = user.get('email', 'Not provided')
+        user['phone'] = user.get('phone', 'Not provided')
+        user['physical_address'] = user.get('physical_address', 'Not provided')
+        user['next_of_kin'] = user.get('next_of_kin', 'Not provided')
+
+        # Debugging: print session data
+        print(f"Session data: {session}") 
+
+        return render_template('profile.html', user=user)
+    
+    except mysql.connector.Error as err:
+        flash(f"Database error: {err}")
+        return redirect(url_for('login'))
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
+
+
+@app.route('/edit_profile', methods=['GET', 'POST'])
+def edit_profile():
+    if 'user_id' not in session:
+        flash("You need to log in first.")
+        return redirect(url_for('login'))
+
+    user_id = session['user_id']
+    
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        
+        # Fetch the current user details
+        query = "SELECT * FROM users WHERE usersid = %s"
+        cursor.execute(query, (user_id,))
+        user = cursor.fetchone()
+
+        if not user:
+            flash("User not found.")
+            return redirect(url_for('login'))
+
+        if request.method == 'POST':
+            # Get updated profile data from the form
+            surname = request.form['surname']
+            other_names = request.form['other_names']
+            email = request.form['email']
+            phone = request.form['phone']
+            physical_address = request.form['physical_address']
+            next_of_kin = request.form['next_of_kin']
+
+            # Update the user profile in the database
+            update_query = """
+                UPDATE users
+                SET surname = %s, other_names = %s, email = %s, phone = %s, 
+                    physical_address = %s, next_of_kin = %s
+                WHERE usersid = %s
+            """
+            cursor.execute(update_query, (surname, other_names, email, phone, physical_address, next_of_kin, user_id))
+            conn.commit()
+            flash("Profile updated successfully!")
+            return redirect(url_for('profile'))  # After updating, redirect to the profile page
+
+        return render_template('edit_profile.html', user=user)
+
+    except mysql.connector.Error as err:
+        flash(f"Database error: {err}")
+        return redirect(url_for('login'))
+
+    finally:
+        cursor.close()
+        conn.close()
+
 
 
 @app.route('/', methods=["GET", "POST"])
@@ -217,6 +334,10 @@ def search():
     return render_template('search.html', det=buses)
 
 
+from datetime import datetime
+
+from datetime import datetime, timedelta
+
 @app.route('/book/<int:busid>', methods=['GET', 'POST'])
 def book(busid):
     try:
@@ -272,7 +393,16 @@ def book(busid):
             
             return redirect(url_for('booking_confirmation', booking_id=booking_id))
         
-        return render_template('booking_form.html', bus=bus, user=user)
+        # Check the type of bus[5] (departure)
+        if isinstance(bus[5], datetime):
+            bus_date = bus[5].strftime('%Y-%m-%d')  # Formatting as 'YYYY-MM-DD'
+        elif isinstance(bus[5], timedelta):
+            # Handle timedelta case
+            bus_date = (datetime.now() + bus[5]).strftime('%Y-%m-%d')
+        else:
+            bus_date = None  # Or any fallback date if the field is empty or invalid
+        
+        return render_template('booking_form.html', bus=bus, user=user, bus_date=bus_date)
     
     except mysql.connector.Error as e:
         print(f"Database error: {e}")
@@ -282,6 +412,7 @@ def book(busid):
     finally:
         cursor.close()
         conn.close()
+
 
 
 @app.route('/booking/confirmation/<int:booking_id>')
