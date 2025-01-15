@@ -1,39 +1,63 @@
 /* index.css */
 
+/* General Styles */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
+
+h2 {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+}
+
 /* Search Form Styles */
 .search-form {
     max-width: 800px;
     margin: 50px auto;
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
 
 .search-form h2 {
-    font-size: 28px;
+    font-size: 30px;
     color: #333;
     text-align: center;
+    margin-bottom: 30px;
+}
+
+/* Form Groups */
+.search-form .form-group {
     margin-bottom: 20px;
 }
 
-.search-form .form-group {
-    margin-bottom: 15px;
-}
-
 .search-form label {
-    font-size: 16px;
-    color: #333;
+    font-size: 18px;
+    color: #555;
+    margin-bottom: 5px;
+    display: block;
 }
 
 .search-form select {
     width: 100%;
-    padding: 10px;
+    padding: 12px;
     font-size: 16px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+    border: 2px solid #ddd;
+    border-radius: 6px;
     background-color: #f9f9f9;
     color: #333;
+    transition: border-color 0.3s ease;
+}
+
+/* Focus State */
+.search-form select:focus {
+    border-color: #007bff;
+    outline: none;
 }
 
 /* Search Button */
@@ -43,9 +67,10 @@
     font-size: 18px;
     padding: 15px 25px;
     border: none;
-    border-radius: 5px;
+    border-radius: 6px;
     cursor: pointer;
-    transition: background-color 0.3s;
+    width: 100%;
+    transition: background-color 0.3s ease;
 }
 
 .search-button:hover {
@@ -55,18 +80,42 @@
 /* Logout Section */
 .logout-section {
     text-align: center;
-    margin-top: 20px;
+    margin-top: 30px;
 }
 
 .logout-button {
     display: inline-block;
-    padding: 10px 20px;
+    padding: 12px 30px;
     background-color: #FF5722;
     color: white;
     text-decoration: none;
-    border-radius: 5px;
+    border-radius: 6px;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
 }
 
 .logout-button:hover {
     background-color: #e64a19;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .search-form {
+        padding: 20px;
+        margin: 20px;
+    }
+
+    .search-form h2 {
+        font-size: 26px;
+    }
+
+    .search-form label,
+    .search-form select,
+    .search-button {
+        font-size: 14px;
+    }
+
+    .logout-button {
+        padding: 10px 20px;
+    }
 }

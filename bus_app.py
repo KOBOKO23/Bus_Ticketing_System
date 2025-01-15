@@ -335,7 +335,6 @@ def search():
 
 
 from datetime import datetime
-
 from datetime import datetime, timedelta
 
 @app.route('/book/<int:busid>', methods=['GET', 'POST'])

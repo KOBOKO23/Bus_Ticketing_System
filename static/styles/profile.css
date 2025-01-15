@@ -8,6 +8,7 @@
   background-color: #f9f9f9;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  gap: 20px; /* Added gap between profile image and info */
 }
 
 /* Profile Image */
@@ -18,7 +19,7 @@
   text-align: center;
   width: 180px;
   height: 180px;
-  border-radius: 4px;
+  border-radius: 50%; /* Make the image circular */
   border: 4px solid #ddd;
   background-color: #f0f0f0;
   overflow: hidden;
@@ -31,20 +32,26 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  border-radius: 50%; /* Ensure the image is circular */
 }
 
 /* Profile Information */
 .profile-info {
   flex: 2;
   padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .profile-info h2 {
-  font-size: 24px;
+  font-size: 28px;
   margin-bottom: 20px;
   color: #333;
+  text-align: center; /* Center-align the title */
 }
 
+/* Info Group */
 .info-group {
   display: flex;
   justify-content: space-between;
@@ -55,19 +62,22 @@
   font-weight: bold;
   color: #555;
   width: 200px;
+  font-size: 16px;
 }
 
 .info-group span {
   color: #444;
   flex: 1;
+  font-size: 16px;
 }
 
+/* Buttons */
 .edit-profile {
   margin-top: 20px;
 }
 
 .edit-profile .btn {
-  padding: 7px 20px;
+  padding: 12px 30px;
   background-color: #007BFF;
   color: #fff;
   text-decoration: none;
@@ -76,8 +86,15 @@
   text-align: center;
   display: inline-block;
   margin-right: 10px;
+  transition: background-color 0.3s ease; /* Smooth hover effect */
 }
-/* Center the Search Button at the Top */
+
+/* Hover Effect on Edit Profile Button */
+.edit-profile .btn:hover {
+  background-color: #0056b3;
+}
+
+/* Search Bus Section */
 .search-bus {
   display: flex;
   justify-content: center;
@@ -85,7 +102,7 @@
 }
 
 .search-bus .btn {
-  padding: 8px 30px; 
+  padding: 12px 40px;
   background-color: #007BFF;
   color: #fff;
   text-decoration: none;
@@ -93,15 +110,44 @@
   font-weight: bold;
   text-align: center;
   display: inline-block;
-  width: 200px;
-  margin: 20px;
-  text-transform: uppercase; 
+  width: 220px;
+  text-transform: uppercase;
+  transition: background-color 0.3s ease; /* Smooth hover effect */
 }
 
+/* Hover Effect on Search Button */
 .search-bus .btn:hover {
   background-color: #0056b3;
 }
 
-.search-bus .btn:hover {
-  background-color: #0056b3;
+/* Small Screens */
+@media (max-width: 768px) {
+  .profile-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .profile-image {
+    max-width: 150px;
+    width: 150px;
+    height: 150px;
+  }
+
+  .profile-info {
+    padding: 10px;
+  }
+
+  .info-group {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .info-group label {
+    width: auto;
+    margin-bottom: 5px;
+  }
+
+  .search-bus .btn {
+    width: 100%;
+  }
 }

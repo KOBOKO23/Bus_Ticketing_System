@@ -38,4 +38,7 @@
 <section class="logout-section">
     <a href="{{ url_for('logout') }}" class="logout-button">Logout</a>
 </section>
+
+<!-- Link the index.js file here -->
+<script src="{{ url_for('static', filename='scripts/index.js') }}"></script>
 {% endblock %}

@@ -1,37 +1,109 @@
 /* login.css */
+
+/* Login Container */
 .login-container {
-    max-width: 400px;
-    margin: 0 auto;
-    padding: 20px;
+    max-width: 450px;
+    margin: 50px auto;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     text-align: center;
 }
 
+/* Error Messages */
 .error-messages {
-    color: red;
-    margin-bottom: 15px;
-}
-
-.form-group {
-    margin-bottom: 15px;
-}
-
-input {
-    width: 100%;
-    padding: 10px;
-    box-sizing: border-box;
-}
-
-button {
-    padding: 10px 20px;
-    margin-bottom: 15px;
-}
-
-.register-link {
-    margin-top: 15px;
+    color: #e74c3c;
+    margin-bottom: 20px;
     font-size: 14px;
 }
 
+/* Form Group */
+.form-group {
+    margin-bottom: 20px;
+}
+
+/* Input Fields */
+input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 16px;
+    background-color: #f9f9f9;
+    color: #333;
+    transition: border-color 0.3s;
+}
+
+input:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+/* Submit Button */
+button {
+    padding: 12px 25px;
+    width: 100%;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+/* Register Link */
+.register-link {
+    margin-top: 20px;
+    font-size: 14px;
+    color: #555;
+}
+
 .register-link a {
-    color: blue;
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.register-link a:hover {
     text-decoration: underline;
+}
+
+/* Forgot Password Link */
+.forgot-password-link {
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+.forgot-password-link a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.forgot-password-link a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+    .login-container {
+        padding: 20px;
+    }
+
+    input {
+        font-size: 14px;
+    }
+
+    button {
+        font-size: 14px;
+    }
+
+    .register-link, .forgot-password-link {
+        font-size: 12px;
+    }
 }
