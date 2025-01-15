@@ -343,6 +343,7 @@ def book(busid):
         conn = get_db_connection()
         cursor = conn.cursor()
         
+        # Fetch bus details
         query = "SELECT busid, origin, destination, cost, seats_left, departure, arrival FROM bus WHERE busid = %s"
         cursor.execute(query, (busid,))
         bus = cursor.fetchone()
@@ -380,26 +381,38 @@ def book(busid):
             update_query = "UPDATE bus SET seats_left = %s WHERE busid = %s"
             cursor.execute(update_query, (updated_seats, busid))
             
-            booking_query = """
-            INSERT INTO booking (usersid, busid, name, phone, email, passengers)
-            VALUES (%s, %s, %s, %s, %s, %s)
-            """
-            cursor.execute(booking_query, (user_id, busid, username, phone, email, passengers))
+            # Allocate seats for each passenger
+            for seat_number in range(1, passengers + 1):
+                # Find the highest seat_number for the current bus
+                seat_query = """
+                SELECT MAX(seat_number) FROM booking WHERE busid = %s
+                """
+                cursor.execute(seat_query, (busid,))
+                max_seat_number = cursor.fetchone()[0]
+                new_seat_number = (max_seat_number or 0) + seat_number  # Increment from the max seat number
+                
+                # Insert the booking with the allocated seat number
+                booking_query = """
+                INSERT INTO booking (usersid, busid, name, phone, email, passengers, seat_number)
+                VALUES (%s, %s, %s, %s, %s, %s, %s)
+                """
+                cursor.execute(booking_query, (user_id, busid, username, phone, email, 1, new_seat_number))
+            
             conn.commit()
             
+            # Get booking ID of the first booking
             booking_id = cursor.lastrowid
             print(f"Booking ID: {booking_id}")
             
             return redirect(url_for('booking_confirmation', booking_id=booking_id))
         
-        # Check the type of bus[5] (departure)
+        # Format the bus date
         if isinstance(bus[5], datetime):
-            bus_date = bus[5].strftime('%Y-%m-%d')  # Formatting as 'YYYY-MM-DD'
+            bus_date = bus[5].strftime('%Y-%m-%d')
         elif isinstance(bus[5], timedelta):
-            # Handle timedelta case
             bus_date = (datetime.now() + bus[5]).strftime('%Y-%m-%d')
         else:
-            bus_date = None  # Or any fallback date if the field is empty or invalid
+            bus_date = None
         
         return render_template('booking_form.html', bus=bus, user=user, bus_date=bus_date)
     
@@ -411,7 +424,6 @@ def book(busid):
     finally:
         cursor.close()
         conn.close()
-
 
 
 @app.route('/booking/confirmation/<int:booking_id>')
