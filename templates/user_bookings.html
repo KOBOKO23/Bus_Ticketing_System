@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <head>
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles/user_bookings.css') }}">
+    </head>
+
+    <section class="booking-history-section">
+        <h2>Your Booking History</h2>
+
+        {% if bookings %}
+            <table class="booking-table">
+                <thead>
+                    <tr>
+                        <th>Booking ID</th>
+                        <th>Bus ID</th>
+                        <th>Name</th>
+                        <th>Passengers</th>
+                        <th>Travel Date</th>
+                        <th>Phone</th>
+                        <th>Email</th>
+                        <th>Booking Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for booking in bookings %}
+                        <tr>
+                            <td>{{ booking.booking_id }}</td>
+                            <td>{{ booking.busid }}</td>
+                            <td>{{ booking.name }}</td>
+                            <td>{{ booking.passengers }}</td>
+                            <td>{{ booking.date_.strftime('%Y-%m-%d') }}</td>
+                            <td>{{ booking.phone }}</td>
+                            <td>{{ booking.email }}</td>
+                            <td>{{ booking.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No bookings found.</p>
+        {% endif %}
+    </section>
+
+    <!-- Include CSS for styling -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/user_bookings.js') }}">
+{% endblock %}

@@ -1,5 +1,3 @@
-// profile.js
-
 document.addEventListener('DOMContentLoaded', function() {
 
     // Image upload functionality
@@ -32,4 +30,5 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Add any other JavaScript enhancements as needed
+
 });

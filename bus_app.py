@@ -465,5 +465,42 @@ def booking_confirmation(booking_id):
         cursor.close()
         conn.close()
 
+
+@app.route('/user/bookings', methods=['GET'])
+def user_bookings():
+    if 'user_id' not in session:
+        flash("You need to log in first.")
+        return redirect(url_for('login'))
+    
+    user_id = session['user_id']
+    
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        
+        booking_query = """
+        SELECT 
+            booking_id, busid, name, passengers, date_, phone, email, created_at
+        FROM 
+            booking
+        WHERE 
+            usersid = %s
+        ORDER BY 
+            created_at DESC
+        """
+        cursor.execute(booking_query, (user_id,))
+        bookings = cursor.fetchall()
+        
+        return render_template('user_bookings.html', bookings=bookings)
+    
+    except mysql.connector.Error as e:
+        print(f"Database error: {e}")
+        flash("An error occurred while retrieving booking history.")
+        return redirect(url_for('search'))
+    
+    finally:
+        cursor.close()
+        conn.close()
+
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=8080)

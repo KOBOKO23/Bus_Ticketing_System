@@ -1,153 +1,87 @@
-/* Profile Container */
 .profile-container {
-  display: flex;
-  justify-content: space-between;
-  padding: 20px;
-  max-width: 1200px;
+  max-width: 800px;
   margin: 0 auto;
-  background-color: #f9f9f9;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  gap: 20px; /* Added gap between profile image and info */
+  font-family: Arial, sans-serif;
 }
 
-/* Profile Image */
-.profile-image {
-  flex: 1;
-  max-width: 200px;
-  padding: 20px;
-  text-align: center;
-  width: 180px;
-  height: 180px;
-  border-radius: 50%; /* Make the image circular */
-  border: 4px solid #ddd;
-  background-color: #f0f0f0;
-  overflow: hidden;
+.profile-header {
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.profile-image {
+  width: 120px;
+  height: 120px;
+  overflow: hidden; /* Ensures the image fits within the square */
+  border-radius: 10px; /* Optional: adds rounded corners */
 }
 
 .profile-image img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  border-radius: 50%; /* Ensure the image is circular */
+  object-fit: cover; /* Ensures the image fills the square without stretching */
 }
 
-/* Profile Information */
-.profile-info {
-  flex: 2;
-  padding: 20px;
+.profile-title {
+  flex-grow: 1;
+  margin-left: 20px;
+}
+
+.header-actions {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  gap: 10px;
 }
 
-.profile-info h2 {
-  font-size: 28px;
-  margin-bottom: 20px;
-  color: #333;
-  text-align: center; /* Center-align the title */
+.header-actions .btn,
+.header-actions .tab-btn {
+  padding: 10px 15px;
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  text-decoration: none;
+  text-align: center;
 }
 
-/* Info Group */
+.header-actions .btn:hover,
+.header-actions .tab-btn:hover {
+  background-color: #0056b3;
+}
+
+.profile-info {
+  margin-top: 20px;
+}
+
 .info-group {
+  margin-bottom: 10px;
   display: flex;
   justify-content: space-between;
-  margin-bottom: 15px;
 }
 
 .info-group label {
   font-weight: bold;
-  color: #555;
-  width: 200px;
-  font-size: 16px;
 }
 
-.info-group span {
-  color: #444;
-  flex: 1;
-  font-size: 16px;
-}
-
-/* Buttons */
-.edit-profile {
+.tab-content {
+  display: none;
   margin-top: 20px;
 }
 
-.edit-profile .btn {
-  padding: 12px 30px;
-  background-color: #007BFF;
-  color: #fff;
-  text-decoration: none;
-  border-radius: 4px;
-  font-weight: bold;
-  text-align: center;
-  display: inline-block;
-  margin-right: 10px;
-  transition: background-color 0.3s ease; /* Smooth hover effect */
+.bookings-table {
+  width: 100%;
+  border-collapse: collapse;
 }
 
-/* Hover Effect on Edit Profile Button */
-.edit-profile .btn:hover {
-  background-color: #0056b3;
+.bookings-table th,
+.bookings-table td {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: left;
 }
 
-/* Search Bus Section */
-.search-bus {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 20px; /* Adjust spacing from top */
-}
-
-.search-bus .btn {
-  padding: 12px 40px;
-  background-color: #007BFF;
-  color: #fff;
-  text-decoration: none;
-  border-radius: 4px;
-  font-weight: bold;
-  text-align: center;
-  display: inline-block;
-  width: 220px;
-  text-transform: uppercase;
-  transition: background-color 0.3s ease; /* Smooth hover effect */
-}
-
-/* Hover Effect on Search Button */
-.search-bus .btn:hover {
-  background-color: #0056b3;
-}
-
-/* Small Screens */
-@media (max-width: 768px) {
-  .profile-container {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .profile-image {
-    max-width: 150px;
-    width: 150px;
-    height: 150px;
-  }
-
-  .profile-info {
-    padding: 10px;
-  }
-
-  .info-group {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .info-group label {
-    width: auto;
-    margin-bottom: 5px;
-  }
-
-  .search-bus .btn {
-    width: 100%;
-  }
+.bookings-table th {
+  background-color: #f8f8f8;
 }
