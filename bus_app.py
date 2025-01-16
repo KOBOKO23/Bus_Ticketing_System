@@ -429,14 +429,20 @@ def book(busid):
             
             # Allocate seats for each passenger
             for seat_number in range(1, passengers + 1):
-                # Find the highest seat_number for the current bus
+                # Find the lowest available seat number for the current bus
                 seat_query = """
-                SELECT MAX(seat_number) FROM booking WHERE busid = %s
+                SELECT seat_number FROM booking WHERE busid = %s ORDER BY seat_number ASC
                 """
                 cursor.execute(seat_query, (busid,))
-                max_seat_number = cursor.fetchone()[0]
-                new_seat_number = (max_seat_number or 0) + seat_number  # Increment from the max seat number
+                booked_seats = cursor.fetchall()
                 
+                # Find the first available seat number that is not taken
+                new_seat_number = 1
+                for booked_seat in booked_seats:
+                    if booked_seat[0] != new_seat_number:
+                        break
+                    new_seat_number += 1
+
                 # Insert the booking with the allocated seat number
                 booking_query = """
                 INSERT INTO booking (usersid, busid, name, phone, email, passengers, seat_number)
@@ -446,7 +452,7 @@ def book(busid):
             
             conn.commit()
             
-            # Get booking ID of the first booking
+            # Get the first booking ID of the first passenger's booking
             booking_id = cursor.lastrowid
             print(f"Booking ID: {booking_id}")
             
@@ -472,56 +478,48 @@ def book(busid):
         conn.close()
 
 
-@app.route('/booking/confirmation/<int:booking_id>')
+@app.route('/booking_confirmation/<int:booking_id>', methods=['GET'])
 def booking_confirmation(booking_id):
-    if 'user_id' not in session:
-        flash("You need to log in first.")
-        return redirect(url_for('login'))
-    
     try:
-        conn = get_db_connection()
-        cursor = conn.cursor(dictionary=True)
-        
-        print(f"Session user_id: {session['user_id']}")
-        print(f"Requested booking_id: {booking_id}")
+        print(f"Booking ID: {booking_id}")
+        print(f"Session user_id: {session.get('user_id')}")
+        print(f"Session content: {session}")
         
         query = """
-        SELECT 
-            b.booking_id,
-            b.name,
-            b.phone,
-            b.email,
-            b.passengers,
-            bus.origin,
-            bus.destination,
-            bus.departure,
-            bus.arrival,
-            bus.cost,
-            DATE_FORMAT(b.date_, '%%Y-%%m-%%d %%H:%%i:%%s') as booking_date
-        FROM booking b
-        JOIN bus ON b.busid = bus.busid
-        WHERE b.booking_id = %s AND b.usersid = %s
+            SELECT 
+                b.booking_id,
+                b.name,
+                b.phone,
+                b.email,
+                b.passengers,
+                bus.origin,
+                bus.destination,
+                bus.departure,
+                bus.arrival,
+                bus.cost,
+                DATE_FORMAT(b.date_, '%%Y-%%m-%%d %%H:%%i:%%s') as booking_date
+            FROM booking b
+            JOIN bus ON b.busid = bus.busid
+            WHERE b.booking_id = %(booking_id)s AND b.usersid = %(user_id)s
         """
-
-        params = (int(booking_id), (session['user_id']))
-        print(f"Query parameters: {params}")
-
-        cursor.execute(query, params)
         
-        print(f"Executing query: {query} with booking_id: {booking_id} and usersid: {session['user_id']}")
+        print(f"Executing query with parameters: booking_id={booking_id}, user_id={session.get('user_id')}")
         
-        # cursor.execute(query, (booking_id, session['user_id']))
-        booking = cursor.fetchone()
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute(query, {'booking_id': booking_id, 'user_id': session.get('user_id')})
+        bookings = cursor.fetchall()
         
-        if not booking:
-            flash("Booking not found.")
+        if not bookings:
+            flash("No booking found.")
             return redirect(url_for('search'))
         
+        booking = bookings[0]
         return render_template('booking_confirmation.html', booking=booking)
     
-    except mysql.connector.Error as err:
-        print(f"Database error: {err}")
-        flash("An error occurred while retrieving your booking.")
+    except mysql.connector.Error as e:
+        print(f"Database error: {e}")
+        flash("An error occurred while processing your request.")
         return redirect(url_for('search'))
     
     finally:
@@ -551,7 +549,7 @@ def user_bookings():
         ORDER BY 
             created_at DESC
         """
-        cursor.execute(booking_query, (user_id,))
+        cursor.execute(query, (booking_id, user_id))
         bookings = cursor.fetchall()
         
         return render_template('user_bookings.html', bookings=bookings)
