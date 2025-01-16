@@ -32,5 +32,25 @@ document.addEventListener('DOMContentLoaded', function () {
         const messageElement = document.createElement('p');
         messageElement.textContent = message;
         errorMessagesDiv.appendChild(messageElement);
+
+        // Add fade-in animation to the error message
+        messageElement.classList.add('fade-in');
     }
+
+    // Add dynamic input focus effect
+    emailInput.addEventListener('focus', function () {
+        emailInput.style.borderColor = '#007bff';
+    });
+
+    emailInput.addEventListener('blur', function () {
+        emailInput.style.borderColor = '#ddd';
+    });
+
+    passwordInput.addEventListener('focus', function () {
+        passwordInput.style.borderColor = '#007bff';
+    });
+
+    passwordInput.addEventListener('blur', function () {
+        passwordInput.style.borderColor = '#ddd';
+    });
 });

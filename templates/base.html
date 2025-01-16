@@ -18,10 +18,26 @@
             </li>
         </ul>
     </nav>
+    
+    <!-- Carousel Section (Background) -->
+    <div class="carousel-container">
+        <div class="carousel">
+            <img src="{{ url_for('static', filename='images/bus1.jpg') }}" alt="Bus 1">
+            <img src="{{ url_for('static', filename='images/bus2.jpg') }}" alt="Bus 2">
+            <img src="{{ url_for('static', filename='images/bus3.jpg') }}" alt="Bus 3">
+            <img src="{{ url_for('static', filename='images/bus4.jpg') }}" alt="Bus 4">
+        </div>
+    </div>
+
     <main id="content">
         {% block content %}
+        <!-- Your login, search buses, and other content will go here -->
+        <h2>Welcome to Vuka Africa</h2>
+        <button>Book Your Ticket</button>
+        <!-- More content like the search form, login, etc. -->
         {% endblock %}
     </main>
+
     <footer>
         <p>&copy; 2024 Vuka Africa. All rights reserved.</p>
     </footer>

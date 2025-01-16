@@ -53,4 +53,14 @@ document.addEventListener('DOMContentLoaded', function() {
         const currentYear = new Date().getFullYear();
         footerYear.innerHTML = `&copy; ${currentYear} Vuka Africa. All rights reserved.`;
     }
+
+    // 6. Toggle Dark Mode (Optional)
+    const darkModeToggle = document.getElementById('darkModeToggle');
+    if (darkModeToggle) {
+        darkModeToggle.addEventListener('click', function() {
+            document.body.classList.toggle('dark-mode');
+            const darkModeStatus = document.body.classList.contains('dark-mode') ? 'enabled' : 'disabled';
+            console.log(`Dark Mode ${darkModeStatus}`);
+        });
+    }
 });

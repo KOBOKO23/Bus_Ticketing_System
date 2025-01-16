@@ -11,6 +11,34 @@
     text-align: center;
 }
 
+/* Carousel Section */
+.carousel-container {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    margin-bottom: 30px; /* Adjust space between carousel and login form */
+}
+
+.carousel {
+    display: flex;
+    animation: scroll-carousel 15s linear infinite;
+}
+
+.carousel img {
+    width: 25%; /* Adjust size of each image */
+    height: auto;
+}
+
+/* Carousel Animation */
+@keyframes scroll-carousel {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
 /* Error Messages */
 .error-messages {
     color: #e74c3c;

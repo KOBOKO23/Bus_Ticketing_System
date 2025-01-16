@@ -5,6 +5,10 @@ import bcrypt
 import os
 from flask_mail import Message, Mail
 import secrets
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+from datetime import datetime
+from datetime import datetime, timedelta
 
 app = Flask(__name__)
 app.secret_key = os.getenv('SECRET_KEY', 'your_secret_key')
@@ -17,6 +21,24 @@ app_config = {
     'password': 'KphiL2022*',
     'database': 'bus_ticketing_system'
 }
+
+def generate_ticket(booking):
+    pdf_file = f"ticket_{booking['booking_id']}.pdf"
+    c = canvas.Canvas(pdf_file, pagesize=letter)
+
+    c.drawString(100, 750, f"Booking ID: {booking['booking_id']}")
+    c.drawString(100, 730, f"Passenger Name: {booking['name']}")
+    c.drawString(100, 710, f"Phone: {booking['phone']}")
+    c.drawString(100, 690, f"Email: {booking['email']}")
+    c.drawString(100, 670, f"From: {booking['origin']}")
+    c.drawString(100, 650, f"To: {booking['destination']}")
+    c.drawString(100, 630, f"Departure: {booking['departure']}")
+    c.drawString(100, 610, f"Arrival: {booking['arrival']}")
+    c.drawString(100, 590, f"Total Cost: {booking['cost']}")
+
+    c.save()
+
+    return pdf_file
 
 def get_db_connection():
     return mysql.connector.connect(**app_config)
@@ -228,21 +250,34 @@ def edit_profile():
 
         if request.method == 'POST':
             # Get updated profile data from the form
-            surname = request.form['surname']
+            username = request.form['username']
             other_names = request.form['other_names']
             email = request.form['email']
             phone = request.form['phone']
             physical_address = request.form['physical_address']
             next_of_kin = request.form['next_of_kin']
+            password = request.form.get('password')  # Get password if provided
+
+            # If password is provided, hash it (make sure to define a hashing function like bcrypt)
+            if password:
+                password = hash_password(password)  # Replace with actual password hashing function
 
             # Update the user profile in the database
             update_query = """
                 UPDATE users
-                SET surname = %s, other_names = %s, email = %s, phone = %s, 
+                SET username = %s, other_names = %s, email = %s, phone = %s, 
                     physical_address = %s, next_of_kin = %s
-                WHERE usersid = %s
             """
-            cursor.execute(update_query, (surname, other_names, email, phone, physical_address, next_of_kin, user_id))
+            
+            # If password was provided, include it in the update query
+            if password:
+                update_query += ", password = %s"
+                cursor.execute(update_query + " WHERE usersid = %s", 
+                               (username, other_names, email, phone, physical_address, next_of_kin, password, user_id))
+            else:
+                cursor.execute(update_query + " WHERE usersid = %s", 
+                               (username, other_names, email, phone, physical_address, next_of_kin, user_id))
+            
             conn.commit()
             flash("Profile updated successfully!")
             return redirect(url_for('profile'))  # After updating, redirect to the profile page
@@ -256,7 +291,6 @@ def edit_profile():
     finally:
         cursor.close()
         conn.close()
-
 
 
 @app.route('/', methods=["GET", "POST"])
@@ -333,9 +367,6 @@ def search():
 
     return render_template('search.html', det=buses)
 
-
-from datetime import datetime
-from datetime import datetime, timedelta
 
 @app.route('/book/<int:busid>', methods=['GET', 'POST'])
 def book(busid):
@@ -457,7 +488,7 @@ def booking_confirmation(booking_id):
         WHERE b.booking_id = %s AND b.usersid = %s
         """
         
-        print(f"Executing query: {query} with booking_id: {booking_id} and user_id: {session['user_id']}")
+        print(f"Executing query: {query} with booking_id: {booking_id} and usersid: {session['user_id']}")
         
         cursor.execute(query, (booking_id, session['user_id']))
         booking = cursor.fetchone()
