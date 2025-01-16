@@ -16,6 +16,7 @@
 
 
 	CREATE TABLE booking (
+    	booking_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     	usersid VARCHAR(255) NOT NULL,
     	busid VARCHAR(20) NOT NULL,
     	name VARCHAR(255) NOT NULL,
@@ -25,7 +26,8 @@
     	updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     	phone VARCHAR(10) NOT NULL,
     	email VARCHAR(255) NOT NULL,
-    	booking_id INT AUTO_INCREMENT PRIMARY KEY
+    	seat_number INT,
+    	FOREIGN KEY (usersid) REFERENCES users(usersid)
 	);
 
 
