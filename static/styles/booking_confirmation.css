@@ -110,3 +110,36 @@
         transform: scale(1);
     }
 }
+
+/* Print-specific CSS */
+@media print {
+    /* Hides the action buttons (including Print button) */
+    .action-buttons {
+        display: none;
+    }
+
+    /* Adjusts layout for printing */
+    .confirmation-container {
+        width: 100%;
+        padding: 20px;
+        box-shadow: none;
+    }
+
+    /* Ensures the text is readable and well-formatted for printing */
+    .confirmation-details {
+        font-size: 14px;
+        line-height: 1.4;
+    }
+
+    /* Optional: change font for print */
+    body {
+        font-family: 'Times New Roman', serif;
+    }
+
+    /* Hide unnecessary sections, e.g., background colors */
+    .success-message {
+        background-color: transparent;
+        border: none;
+        color: #000;
+    }
+}
