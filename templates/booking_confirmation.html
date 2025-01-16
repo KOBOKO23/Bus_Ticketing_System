@@ -16,11 +16,12 @@
             
             <div class="booking-info">
                 <h4>Booking Details</h4>
-                <p><strong>Booking ID:</strong> {{ booking.booking_id }}</p>
+                <p><strong>Booking ID:</strong> {{ booking.booking_id or 'N/A' }}</p>
                 <p><strong>Passenger Name:</strong> {{ booking.name or 'N/A' }}</p>
-                <p><strong>Number of Passengers:</strong> {{ booking.passengers }}</p>
+                <p><strong>Number of Passengers:</strong> {{ booking.passengers or 'N/A' }}</p>
                 <p><strong>Phone:</strong> {{ booking.phone or 'N/A' }}</p>
                 <p><strong>Email:</strong> {{ booking.email or 'N/A' }}</p>
+                <p><strong>Seat Number:</strong> {{ booking.seat_number or 'N/A' }}</p>
             </div>
 
             <div class="journey-info">
@@ -35,12 +36,9 @@
         
         <div class="action-buttons">
             <a href="{{ url_for('search') }}" class="btn btn-primary">Book Another Ticket</a>
-            <!-- Add download ticket button if you implement that feature -->
-            <!-- <a href="#" class="btn btn-secondary">Download Ticket</a> -->
         </div>
     </div>
 </section>
 
-<!-- Link to the JavaScript file -->
 <script src="{{ url_for('static', filename='scripts/booking_confirmation.js') }}"></script>
 {% endblock %}

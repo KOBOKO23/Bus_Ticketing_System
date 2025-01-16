@@ -481,10 +481,16 @@ def book(busid):
 @app.route('/booking_confirmation/<int:booking_id>', methods=['GET'])
 def booking_confirmation(booking_id):
     try:
+        user_id = session.get('user_id')  # Get the user_id from the session
+        if not user_id:
+            flash("You must be logged in to view this page.")
+            return redirect(url_for('login'))  # Redirect if not logged in
+
+        # Debugging: Log user_id and booking_id to verify data
         print(f"Booking ID: {booking_id}")
-        print(f"Session user_id: {session.get('user_id')}")
-        print(f"Session content: {session}")
-        
+        print(f"User ID: {user_id}")
+
+        # SQL query to fetch booking details
         query = """
             SELECT 
                 b.booking_id,
@@ -492,39 +498,49 @@ def booking_confirmation(booking_id):
                 b.phone,
                 b.email,
                 b.passengers,
+                b.seat_number,
                 bus.origin,
                 bus.destination,
                 bus.departure,
                 bus.arrival,
                 bus.cost,
-                DATE_FORMAT(b.date_, '%%Y-%%m-%%d %%H:%%i:%%s') as booking_date
+                DATE_FORMAT(b.date_, '%%Y-%%m-%%d %%H:%%i:%%s') AS booking_date
             FROM booking b
             JOIN bus ON b.busid = bus.busid
             WHERE b.booking_id = %(booking_id)s AND b.usersid = %(user_id)s
         """
         
-        print(f"Executing query with parameters: booking_id={booking_id}, user_id={session.get('user_id')}")
-        
+        # Database connection and execution
         conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute(query, {'booking_id': booking_id, 'user_id': session.get('user_id')})
+
+        # Debugging: Print query parameters
+        print(f"Executing query with booking_id={booking_id}, user_id={user_id}")
+        
+        cursor.execute(query, {'booking_id': booking_id, 'user_id': user_id})
         bookings = cursor.fetchall()
-        
+
+        # Debugging: Check if data is returned
         if not bookings:
-            flash("No booking found.")
+            print("No booking found.")
+            flash("No booking found for this ID.")
             return redirect(url_for('search'))
-        
-        booking = bookings[0]
+
+        # Debugging: Check the fetched booking data
+        print(f"Fetched booking: {bookings[0]}")
+
+        booking = bookings[0]  # Get the first booking result
         return render_template('booking_confirmation.html', booking=booking)
     
     except mysql.connector.Error as e:
         print(f"Database error: {e}")
-        flash("An error occurred while processing your request.")
+        flash("An error occurred while fetching booking details.")
         return redirect(url_for('search'))
-    
+
     finally:
         cursor.close()
         conn.close()
+
 
 
 @app.route('/user/bookings', methods=['GET'])
