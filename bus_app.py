@@ -539,6 +539,7 @@ def user_bookings():
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
         
+        # Correct the query variable name
         booking_query = """
         SELECT 
             booking_id, busid, name, passengers, date_, phone, email, created_at
@@ -549,7 +550,9 @@ def user_bookings():
         ORDER BY 
             created_at DESC
         """
-        cursor.execute(query, (booking_id, user_id))
+        
+        # Use the correct query variable
+        cursor.execute(booking_query, (user_id,))
         bookings = cursor.fetchall()
         
         return render_template('user_bookings.html', bookings=bookings)
@@ -562,6 +565,7 @@ def user_bookings():
     finally:
         cursor.close()
         conn.close()
+
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=8080)
