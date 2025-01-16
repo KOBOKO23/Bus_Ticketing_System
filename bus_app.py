@@ -482,15 +482,20 @@ def booking_confirmation(booking_id):
             bus.departure,
             bus.arrival,
             bus.cost,
-            DATE_FORMAT(b.date_, '%Y-%m-%d %H:%i:%s') as booking_date
+            DATE_FORMAT(b.date_, '%%Y-%%m-%%d %%H:%%i:%%s') as booking_date
         FROM booking b
         JOIN bus ON b.busid = bus.busid
         WHERE b.booking_id = %s AND b.usersid = %s
         """
+
+        params = (int(booking_id), (session['user_id']))
+        print(f"Query parameters: {params}")
+
+        cursor.execute(query, params)
         
         print(f"Executing query: {query} with booking_id: {booking_id} and usersid: {session['user_id']}")
         
-        cursor.execute(query, (booking_id, session['user_id']))
+        # cursor.execute(query, (booking_id, session['user_id']))
         booking = cursor.fetchone()
         
         if not booking:

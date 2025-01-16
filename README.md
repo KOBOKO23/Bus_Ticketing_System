@@ -26,7 +26,7 @@ The Bus Ticketing System is a web application built using the Flask web framewor
 - **Backend**: Flask (Python Web Framework)
 - **Database**: MySQL
 - **MySQL Connector**: To interact with the MySQL database
-- **HTML, CSS**: For front-end layout and design
+- **HTML, CSS, JAVASCRIPT**: For front-end layout and design
 
 ## Project Structure
 
