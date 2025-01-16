@@ -9,6 +9,9 @@ from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from datetime import datetime
 from datetime import datetime, timedelta
+from itsdangerous import URLSafeTimedSerializer as Serializer
+from itsdangerous import SignatureExpired, BadData
+from email_validator import validate_email, EmailNotValidError  
 
 app = Flask(__name__)
 app.secret_key = os.getenv('SECRET_KEY', 'your_secret_key')
@@ -43,14 +46,28 @@ def generate_ticket(booking):
 def get_db_connection():
     return mysql.connector.connect(**app_config)
 
+
 def send_reset_email(email, reset_link):
     msg = Message('Password Reset Request', sender='no-reply@vukaafrica.com', recipients=[email])
     msg.body = f"To reset your password, visit the following link: {reset_link}"
     mail.send(msg)
 
-def generate_reset_token():
-    token = secrets.token_urlsafe(64)
-    return token
+def generate_reset_token(email):
+    s = Serializer(app.config['SECRET_KEY'], salt='password-reset')
+    return s.dumps({'email': email})
+
+def verify_reset_token(token, expiration=3600):
+    s = Serializer(app.config['SECRET_KEY'], salt='password-reset')
+    try:
+        # This will raise an exception if the token is invalid or expired
+        email = s.loads(token, max_age=expiration)['email']
+    except SignatureExpired:
+        # Token has expired
+        return None
+    except BadData:
+        # Invalid token
+        return None
+    return email
 
 @app.route('/register', methods=["GET", "POST"])
 def register():
@@ -144,7 +161,7 @@ def forgot_password():
         cursor.execute("SELECT * FROM users WHERE email = %s", (email,))
         user = cursor.fetchone()
         if user:
-            token = generate_reset_token()
+            token = generate_reset_token(email)  # Pass email here
             cursor.execute("UPDATE users SET reset_token = %s WHERE email = %s", (token, email))
             conn.commit()
             
@@ -157,8 +174,6 @@ def forgot_password():
             flash("Email not found", "error")
     
     return render_template('forgot_password.html')
-
-
 @app.route('/reset-password/<token>', methods=['GET', 'POST'])
 def reset_password(token):
     conn = get_db_connection()
