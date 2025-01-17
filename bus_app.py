@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash, logging
 from werkzeug.security import generate_password_hash
+from werkzeug.utils import secure_filename
 import mysql.connector
 import bcrypt
 import os
@@ -24,6 +25,15 @@ app_config = {
     'password': 'KphiL2022*',
     'database': 'bus_ticketing_system'
 }
+
+# Directory for saving uploaded images
+UPLOAD_FOLDER = 'static/uploads/profile_images'
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 def generate_ticket(booking):
     pdf_file = f"ticket_{booking['booking_id']}.pdf"
@@ -240,6 +250,34 @@ def profile():
             cursor.close()
         if conn:
             conn.close()
+
+
+@app.route('/upload_profile_image', methods=['POST'])
+def upload_profile_image():
+    if 'profile_image' not in request.files:
+        flash('No file part')
+        return redirect(url_for('profile'))
+
+    file = request.files['profile_image']
+    if file.filename == '':
+        flash('No selected file')
+        return redirect(url_for('profile'))
+
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        file.save(file_path)
+
+        # Update user profile with the new image URL (adjust as needed)
+        user = get_current_user()  # Replace with your function to fetch the logged-in user
+        user['profile_image_url'] = f'/static/uploads/profile_images/{filename}'
+        save_user(user)  # Replace with your function to save user data
+
+        flash('Profile picture updated successfully!')
+        return redirect(url_for('profile'))
+    else:
+        flash('Invalid file type. Only images are allowed.')
+        return redirect(url_for('profile'))
 
 
 @app.route('/edit_profile', methods=['GET', 'POST'])
@@ -540,7 +578,6 @@ def booking_confirmation(booking_id):
     finally:
         cursor.close()
         conn.close()
-
 
 
 @app.route('/user/bookings', methods=['GET'])

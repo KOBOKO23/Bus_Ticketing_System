@@ -16,6 +16,7 @@
   height: 120px;
   overflow: hidden; /* Ensures the image fits within the square */
   border-radius: 10px; /* Optional: adds rounded corners */
+  border: 2px solid #ddd; /* Added border for better visibility */
 }
 
 .profile-image img {
@@ -65,11 +66,13 @@
   font-weight: bold;
 }
 
+/* Tab content visibility */
 .tab-content {
   display: none;
   margin-top: 20px;
 }
 
+/* Table styles for bookings */
 .bookings-table {
   width: 100%;
   border-collapse: collapse;
@@ -84,4 +87,60 @@
 
 .bookings-table th {
   background-color: #f8f8f8;
+}
+
+/* Styles for the upload form */
+.upload-form {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.upload-form label {
+  font-weight: bold;
+}
+
+.upload-form input[type="file"] {
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.upload-form .btn {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.upload-form .btn:hover {
+  background-color: #45a049;
+}
+
+/* Responsive design adjustments */
+@media (max-width: 600px) {
+  .profile-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .header-actions {
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+
+  .info-group {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .bookings-table th,
+  .bookings-table td {
+    font-size: 14px;
+  }
 }
