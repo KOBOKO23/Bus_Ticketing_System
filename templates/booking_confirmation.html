@@ -28,8 +28,8 @@
                 <h4>Journey Details</h4>
                 <p><strong>From:</strong> {{ booking.origin or 'N/A' }}</p>
                 <p><strong>To:</strong> {{ booking.destination or 'N/A' }}</p>
-                <p><strong>Departure:</strong> {{ booking.departure | date('Y-m-d H:i') if booking.departure else 'N/A' }}</p>
-                <p><strong>Arrival:</strong> {{ booking.arrival | date('Y-m-d H:i') if booking.arrival else 'N/A' }}</p>
+                <p><strong>Departure:</strong> {{ booking.departure or 'N/A' }}</p>
+                <p><strong>Arrival:</strong> {{ booking.arrival or 'N/A' }}</p>
                 <p><strong>Total Cost:</strong> Ksh {{ booking.cost * booking.passengers if booking.cost and booking.passengers else '0' }}</p>
             </div>
         </div>

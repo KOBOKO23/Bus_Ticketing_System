@@ -548,36 +548,47 @@ def booking_confirmation(booking_id):
             WHERE b.booking_id = %(booking_id)s AND b.usersid = %(user_id)s
         """
         
-        # Database connection and execution
-        conn = get_db_connection()
-        cursor = conn.cursor()
+        # Using context manager to manage the DB connection
+        with get_db_connection() as conn:
+            with conn.cursor() as cursor:
+                # Debugging: Print query parameters
+                print(f"Executing query with booking_id={booking_id}, user_id={user_id}")
 
-        # Debugging: Print query parameters
-        print(f"Executing query with booking_id={booking_id}, user_id={user_id}")
-        
-        cursor.execute(query, {'booking_id': booking_id, 'user_id': user_id})
-        bookings = cursor.fetchall()
+                cursor.execute(query, {'booking_id': booking_id, 'user_id': user_id})
+                bookings = cursor.fetchall()
 
-        # Debugging: Check if data is returned
-        if not bookings:
-            print("No booking found.")
-            flash("No booking found for this ID.")
-            return redirect(url_for('search'))
+                # Debugging: Check if data is returned
+                if not bookings:
+                    print("No booking found.")
+                    flash("No booking found for this ID.")
+                    return redirect(url_for('search'))
 
-        # Debugging: Check the fetched booking data
-        print(f"Fetched booking: {bookings[0]}")
+                # Fetch the first booking result and map it to a dictionary for template
+                booking = bookings[0]
+                booking_data = {
+                    'booking_id': booking[0],
+                    'name': booking[1],
+                    'phone': booking[2],
+                    'email': booking[3],
+                    'passengers': booking[4],
+                    'seat_number': booking[5],
+                    'origin': booking[6],
+                    'destination': booking[7],
+                    'departure': booking[8],
+                    'arrival': booking[9],
+                    'cost': booking[10],
+                    'booking_date': booking[11]
+                }
 
-        booking = bookings[0]  # Get the first booking result
-        return render_template('booking_confirmation.html', booking=booking)
+                # Debugging: Check the fetched booking data
+                print(f"Fetched booking: {booking_data}")
+
+                return render_template('booking_confirmation.html', booking=booking_data)
     
     except mysql.connector.Error as e:
         print(f"Database error: {e}")
         flash("An error occurred while fetching booking details.")
         return redirect(url_for('search'))
-
-    finally:
-        cursor.close()
-        conn.close()
 
 
 @app.route('/user/bookings', methods=['GET'])
