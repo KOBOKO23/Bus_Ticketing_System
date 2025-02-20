@@ -45,6 +45,7 @@ MarkupSafe==2.1.5
 mccabe==0.7.0
 mistune==3.0.2
 mysql==0.0.3
+mysql-connector-python
 nodejs==0.1.1
 optional-django==0.1.0
 packaging==24.1
