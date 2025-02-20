@@ -20,10 +20,10 @@ app.secret_key = os.getenv('SECRET_KEY', 'your_secret_key')
 mail = Mail(app)
 
 app_config = {
-    'host': 'localhost',
-    'user': 'root',
-    'password': 'KphiL2022*',
-    'database': 'bus_ticketing_system'
+    'host': os.getenv('DB_HOST', 'localhost.render.com'),
+    'user': os.getenv('DB_USER', 'root'),
+    'password': os.getenv('DB_PASSWORD', 'KphiL2022*'),
+    'database': os.getenv('DB_NAME', 'bus_ticketing_system')
 }
 
 # Directory for saving uploaded images
@@ -54,7 +54,12 @@ def generate_ticket(booking):
     return pdf_file
 
 def get_db_connection():
-    return mysql.connector.connect(**app_config)
+    return mysql.connector.connect(
+        host=app_config['host'],
+        user=app_config['user'],
+        password=app_config['password'],
+        database=app_config['database']
+    )
 
 
 def send_reset_email(email, reset_link):
@@ -129,6 +134,9 @@ def register():
 
 @app.route('/login', methods=["GET", "POST"])
 def login():
+    conn = None  # Ensure conn is initialized
+    cursor = None  # Ensure cursor is initialized
+    
     if request.method == "POST":
         email = request.form['email']
         password = request.form['password']
@@ -149,10 +157,13 @@ def login():
         except mysql.connector.Error as err:
             flash(f"Database error: {err}")
         finally:
-            cursor.close()
-            conn.close()
+            if cursor:  # Only close if cursor was created
+                cursor.close()
+            if conn:  # Only close if connection was established
+                conn.close()
 
     return render_template('login.html')
+
 
 @app.route('/logout')
 def logout():
@@ -184,6 +195,8 @@ def forgot_password():
             flash("Email not found", "error")
     
     return render_template('forgot_password.html')
+
+
 @app.route('/reset-password/<token>', methods=['GET', 'POST'])
 def reset_password(token):
     conn = get_db_connection()
