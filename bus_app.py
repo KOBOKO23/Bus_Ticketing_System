@@ -20,11 +20,13 @@ app.secret_key = os.getenv('SECRET_KEY', 'your_secret_key')
 mail = Mail(app)
 
 app_config = {
-    'host': os.getenv('DB_HOST', 'localhost.render.com'),
-    'user': os.getenv('DB_USER', 'root'),
-    'password': os.getenv('DB_PASSWORD', 'KphiL2022*'),
-    'database': os.getenv('DB_NAME', 'bus_ticketing_system')
+    'host': os.getenv('DB_HOST', 'caboose.proxy.rlwy.net'),  # Railway MySQL Host
+    'user': os.getenv('DB_USER', 'root'),  # Railway MySQL User
+    'password': os.getenv('DB_PASSWORD', 'KphiL2022*'),  # Railway MySQL Password
+    'database': os.getenv('DB_NAME', 'bus_ticketing_system'),  # Railway Database Name
+    'port': int(os.getenv('DB_PORT', 28786))  # Railway MySQL Port
 }
+
 
 # Directory for saving uploaded images
 UPLOAD_FOLDER = 'static/uploads/profile_images'
